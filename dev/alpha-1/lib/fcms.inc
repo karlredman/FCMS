@@ -64,7 +64,8 @@ function fcms_run()
 	  break;
       
 	case save_content:
-	  $query_str="update content set body=\"$content_body\",
+	  $txt = save_txt($content_body);
+	  $query_str="update content set body=\"$txt\",
 		title=\"$content_title\" where content_id=$action_code";
 	  //title=\"$content_title\" where content_id=\"$action_code\"";
 	  break;
@@ -75,7 +76,8 @@ function fcms_run()
 	  break;
 
 	case save_content_body:
-	  $query_str="update content set body='$content_body' 
+	  $txt = save_txt($content_body);
+	  $query_str="update content set body=\"$txt\" 
 		where content_id = $action_code";
 	  break;
 	}

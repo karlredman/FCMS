@@ -36,6 +36,8 @@ include("error.inc");			//error functions (basic)
 //level 2
 include("db.inc");			//database functions
 include("forms.inc");			//forms API
+include("convert.inc");			//various conversions
+						//(txt2html, etc)
 
 //level 3
 include("globals.inc");			//global variable declarations

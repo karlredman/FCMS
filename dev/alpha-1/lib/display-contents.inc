@@ -164,16 +164,19 @@ function show_content($content_obj)
   if($content_obj->body_align == "center")
     echo("<center>\n");
   
+
+  //convert body to html
+  $body = txt2html($content_obj->body);
 	  
     //if($alt_edit && strstr($mode, "edit") && $action_code == $content_obj->content_id)
   global $alt_edit, $mode, $action_code; 
   if($alt_edit && strstr($mode, "edit_content_item") && 
      $action_code == $content_obj->content_id) 
     {
-      edit_content_item($content_obj->title, $content_obj->body);
+      edit_content_item($content_obj->title, $body);
     }
   else
-    echo("<font size=$content_obj->body_font_size face=$content_obj->body_font_face> $content_obj->body </font>\n");
+    echo("<font size=$content_obj->body_font_size face=$content_obj->body_font_face> $body </font>\n");
   
   if($content_obj->body_align == "center")
     echo("</center>\n"); 
