@@ -1,7 +1,7 @@
 <?
 
-//include("globals.inc");
-include("error.inc");
+include_once("globals.inc");
+include_once("error.inc");
 
 include("accessvars.inc");
 
@@ -13,10 +13,10 @@ include("site_class.inc");
 
 class host_class 
 {
-  function host_class($host_id, $site_id, $page_id)
+  function host_class($message)
     {
       //set id
-      $this->id = $host_id;
+      $this->id = $message->host_id;
 
       //get host data
      if(! ($this->sql_host=mysql_query("select * from host where host_id = $this->id")) )
@@ -25,7 +25,7 @@ class host_class
      if(! ($this->sql_host_obj=mysql_fetch_object($this->sql_host)) ) 
        error_quit("mysql_fetch_object()", "host_class::():sql_host_obj", TRUE );
 
-     $this->site = new site_class($site_id, $page_id);
+     $this->site = new site_class(&$message);
     }
 
 

@@ -1,27 +1,30 @@
 <?
 
-//include_once("forms.inc");
+include_once("globals.inc");
+include_once("error.inc");
+
+include_once("supportFun.inc");
+
 include("component_class.inc");
 
 class page_class
 {
-  function page_class($site_id, $page_id)
+  function page_class($message)
     { 
-      $this->id = $page_id; 
-      $this->site_id = $site_id;
+      $this->id = $message->page_id; 
+      $this->site_id = $message->site_id;
 
       //get page data
-      //if(! ($this->sql_page=mysql_query("select * from page where page_id = $this->id")) )
-     if(! ($this->sql_page=mysql_query("select * from page where page_id = $this->id")) )
-     	error_quit("mysql_query()", "page_class::():sql_page", TRUE );
+     if(! ($this->sql_page=mysql_query("select * from page where page_id = $message->page_id")) )
+       {
+	 error_quit("mysql_query()", "page_class::():sql_page", TRUE );
+       }
 
      if(! ($this->sql_page_obj=mysql_fetch_object($this->sql_page)) ) 
        error_quit("mysql_fetch_object()", "page_class::():sql_page_obj", TRUE );
 
-      $this->component = new component_class($site_id, $page_id);
-
-
-      $this->display_contents_by_page_type();
+     //pump
+     $this->pump(&$message);
 
      //$thing = $this->sql_page_obj;
      //print("sql_page_obj->page_title = $thing->page_title<br>\n");
@@ -86,5 +89,31 @@ class page_class
     }
 
 
-}
+  function pump($message)
+    {
+      switch($message->mode)
+	{
+	case page:
+	  switch($message->action)
+	    {
+	    case edit:
+	      //display_page_heading("fcms: Edit Page");
+	      $this->component = new component_class(&$message);
+	      $this->display_contents_by_page_type();
+	      break;
+	    case display:
+	    default:
+	      //display_page_heading();
+	      $this->component = new component_class(&$message);
+	      $this->display_contents_by_page_type();
+	      break;
+	    }
+	  break;
+	case component:
+	  break;
+	default:
+	  break;
+	}
+    }
+}// end page_class
 ?>

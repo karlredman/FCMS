@@ -1,6 +1,8 @@
 <?
+include_once("globals.inc");
+include_once("error.inc");
 
-include_once("convert.inc");
+include_once("supportFun.inc");
 
 class component_class
 {
@@ -8,17 +10,17 @@ class component_class
   var $sql_component_obj;
 
   var $id;				//component id
-  var $site_id;
-  var $page_id;
+  var $action;				//component action
 
-  function component_class($site_id, $page_id)
+  function component_class($message)
     { 
-      $this->site_id = $site_id; 
-      $this->page_id = $page_id; 
+      $this->id = $message->component_id;
+      $this->mode = $message->mode;
+      $this->action = $message->action;
 
       //get site data
       if(! ($this->sql_component=
-	    mysql_query("select * from content where page_id = $this->page_id")) )
+	    mysql_query("select * from content where page_id = $message->page_id")) )
 	{
 	  error_quit("mysql_query()", "component_class::():sql_component", TRUE );
 	}
@@ -47,8 +49,12 @@ class component_class
 	print("<br>\n");
 	print("<td></tr>\n");
     
-	if(strstr($action, "edit") )
-	  print("<hr>\n");
+	    err_out("$message->mode");
+	if(strstr($this->mode, "page") &&
+	   strstr($this->action, "edit") )
+	  { 
+	    print("<hr>\n"); 
+	  }
 
       } while($this->sql_component_obj = mysql_fetch_object($this->sql_component));
     }
@@ -169,8 +175,15 @@ class component_class
 
       $obj = $this->sql_component_obj;
 
-      //if($action == "edit_page")
-      //button_show_edit("edit_content_item", $this->sql_component_obj->content_id);
+      if($this->mode == "page" &&
+	 $this->action == "edit")
+	{
+	  //button_show_edit("edit_content_item", $this->sql_component_obj->content_id);
+	  print("xx");
+
+	  if(!($button = new button_class($this->mode, $this->action)) )
+	    err_quit("show_content()", "new button_class()", TRUE);
+	}
   
       //display content title
       if($obj->title_align == "center")
@@ -189,13 +202,13 @@ class component_class
       //display content body
       if($obj->body_align == "center")
 	echo("<center>\n");
-  
 
       //convert body to html
       $body = txt2html($obj->body);
 	  
-      if($alt_edit && strstr($action, "edit_content_item") && 
-	 $action_code == $obj->content_id) 
+      if($GLOBALS["in_page_editing"] && 
+	 strstr($action, "edit_content_item") && 
+	 $component_id == $obj->content_id) 
 	{
 	  //edit_content_item($this->sql_component_obj->title, $body);
 	}
