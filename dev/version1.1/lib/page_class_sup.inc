@@ -63,13 +63,14 @@ function PC_pump($message, $page_obj)
 	  //display page administration page
 	  break;
 	case edit:
-	  //display_page_heading("fcms: Edit Page");
+	  //$page_obj->display_page_heading($message, "fcms: Edit Page<br>");
+	  $page_obj->display_page_heading($message, NULL);
 	  $page_obj->componentSet = new componentSet_class(&$message);
 	  $page_obj->display_contents_by_page_type(&$message);
 	  break;
 	case display:
 	default:
-	  //display_page_heading();
+	  $page_obj->display_page_heading($message, NULL);
 	  $page_obj->componentSet = new componentSet_class(&$message);
 	  $page_obj->display_contents_by_page_type(&$message);
 	  break;
@@ -78,6 +79,14 @@ function PC_pump($message, $page_obj)
     case component:
       switch($message->action)
 	{
+	case delete:
+	  $page_obj->componentSet = new componentSet_class(&$message);
+	  $page_obj->componentSet->delete(&$message);
+	  $page_obj->componentSet->destroy();
+
+	  $message->again = TRUE;
+	  
+	  break;
 	case add:
 	  $page_obj->componentSet = new componentSet_class(&$message);
 	  $page_obj->componentSet->add(&$message);
@@ -88,11 +97,9 @@ function PC_pump($message, $page_obj)
 	case admin:
 	  break;
 	case edit:
-	  //err_out("mode->action: component->edit");
-	  //$message->dump();
-	      //display_page_heading();
-	      $page_obj->componentSet = new componentSet_class(&$message);
-	      $page_obj->display_contents_by_page_type(&$message);
+	  $page_obj->display_page_heading($message, "fcms: Component Edit<br>");
+	  $page_obj->componentSet = new componentSet_class(&$message);
+	  $page_obj->display_contents_by_page_type(&$message);
 	  break;
 	case save:
 	      //create a component
@@ -158,7 +165,7 @@ function PC_display_contents_by_theme($message, $theme, $page_obj)
   */
       
   //account for in page editing
-  if(!$GLOBALS["in_page_editing"])
+  if(!$GLOBALS["in_page_editing"] && $message->action == "edit")
     $theme="default";
 
   $componentSet = $page_obj->componentSet;
@@ -170,6 +177,7 @@ function PC_display_contents_by_theme($message, $theme, $page_obj)
     break;
   case "staggared":
     $type_obj->display_staggared(&$message, "");
+    break;
   case "staggared_reverse":
     $type_obj->display_staggared(&$message, "reverse");
     break;
@@ -179,6 +187,43 @@ function PC_display_contents_by_theme($message, $theme, $page_obj)
     $type_obj->display_default(&$message);
     break;
   }
+}
+
+function PC_display_page_heading($message, $text, $page_obj)
+{
+  if($text)
+    $body = $text;
+  else
+    $body = txt2html($page_obj->sql_page_obj->heading);
+
+  if($message->mode == "page" &&
+     $message->action == "edit")
+    {
+      //display an edit button
+      if(!($button = new button_class($message->host_id, $message->site_id, 
+				      $message->page_id, $message->referp_id,
+				      $this->component->sql_component_obj->id,
+				      "page", "admin",
+				      "admnPage") ))
+	    {
+	      ////////////////////hmmmmmmmm......... !!!
+	      //error_quit("show_content()", "new button_class()", TRUE);
+	    }
+    }
+
+  if($page_obj->sql_page_obj->heading_font_align == "center")
+    print("<center>\n");
+
+  print("<font size=+".$page_obj->sql_page_obj->heading_font_size." ".
+	"face=".$page_obj->sql_page_obj->heading_font_face."> ".$body." </font>\n");
+
+  if($page_obj->sql_page_obj->heading_font_align == "center")
+    print("</center>\n");
+
+  if($message->mode == "page" && $message->action == "edit")
+    print("<hr>");
+  else
+    print("<br>");
 }
 
 ?>

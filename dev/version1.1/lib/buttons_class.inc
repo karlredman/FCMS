@@ -26,17 +26,22 @@ class button_class
       switch($type)
 	{
 	case add_component:
-	  //e();
 	  $image = $GLOBALS["add_component_image"]; 
 	  break;
 	case add_page:
 	  $image = $GLOBALS["addPage_image"]; 
+	  break; 
+	case admnPage:
+	  $image = $GLOBALS["admnPage_image"]; 
 	  break; 
 	case back:
 	  $image = $GLOBALS["back_image"]; 
 	  break; 
 	case cancel:
 	  $image = $GLOBALS["cancel_image"]; 
+	  break;
+	case delete:
+	  $image = $GLOBALS["delete_image"]; 
 	  break;
 	case edit_host:
 	  $image = $GLOBALS["editHost_image"]; 
@@ -58,6 +63,9 @@ class button_class
 	  break; 
 	case logout:
 	  $image = $GLOBALS["logout_image"]; 
+	  break; 
+	case settings:
+	  $image = $GLOBALS["settings_image"]; 
 	  break; 
 	case site_logo:
 	  $image = $GLOBALS["site_logo"]; 

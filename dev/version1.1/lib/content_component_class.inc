@@ -124,6 +124,9 @@ class content_component_class
     {
       //display contents (doubled theme)
 
+      if($message->again)
+	  $message->again = FALSE;
+
       $component = $this->component;
       $comp_sql = $component->sql_component;
       $comp_obj = $component->sql_component_obj;
@@ -159,8 +162,11 @@ class content_component_class
 
 	  }
 
-      } while($comp_obj = mysql_fetch_object($comp_sql) &&
-	      $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
+	$this->sql_content_obj= mysql_fetch_object($this->sql_content);
+      } while($this->component->sql_component_obj = 
+	      mysql_fetch_object($this->component->sql_component) );
+      //} while($comp_obj = mysql_fetch_object($comp_sql) &&
+	//      $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
 
       print("</table>\n");
     }
@@ -173,6 +179,9 @@ class content_component_class
 		staggared = 2 content-items then one, then two, etc.
 		staggared_reverse = 1 content-item then two, then one, etc.
       */
+
+      if($message->again)
+	  $message->again = FALSE;
 
       $component = $this->component;
       $comp_sql = $component->sql_component;
@@ -231,8 +240,11 @@ class content_component_class
 	  }
     
 	
-      } while($comp_obj = mysql_fetch_object($comp_sql) &&
-	      $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
+	$this->sql_content_obj= mysql_fetch_object($this->sql_content);
+      } while($this->component->sql_component_obj = 
+	      mysql_fetch_object($this->component->sql_component) );
+      //} while($comp_obj = mysql_fetch_object($comp_sql) &&
+	      //$this->sql_content_obj= mysql_fetch_object($this->sql_content) );
     
       print("</table>\n");
 
@@ -243,10 +255,14 @@ class content_component_class
       //display a component of type content
   //err_out("show_content():"); $message->dump(); exit;
 
+      //table for buttons
+      print("<table><tr>\n");
+
       if($message->mode == "page" &&
 	 $message->action == "edit" &&
-	 $message->security_level <= 2)
+	 $message->security_level <= 3)
 	{
+	  print("<td>");
 	  if(!($button = new button_class($message->host_id, $message->site_id, 
 					  $message->page_id, $message->referp_id,
 					  $this->component->sql_component_obj->id,
@@ -256,7 +272,43 @@ class content_component_class
 	      ////////////////////hmmmmmmmm......... !!!
 	      //error_quit("show_content()", "new button_class()", TRUE);
 	    }
+	  print("</td>");
 	}
+      if($message->mode == "page" &&
+	 $message->action == "edit" &&
+	 $message->security_level <= 2)
+	{
+	  print("<td>");
+	  if(!($button = new button_class($message->host_id, $message->site_id, 
+					  $message->page_id, $message->referp_id,
+					  $this->component->sql_component_obj->id,
+					  "component", "delete",
+					  "delete") ))
+	    {
+	      ////////////////////hmmmmmmmm......... !!!
+	      //error_quit("show_content()", "new button_class()", TRUE);
+	    }
+	  print("<td>");
+	}
+
+      if($message->mode == "page" &&
+	 $message->action == "edit" &&
+	 $message->security_level <= 2)
+	{
+	  print("<td>");
+	  if(!($button = new button_class($message->host_id, $message->site_id, 
+					  $message->page_id, $message->referp_id,
+					  $this->component->sql_component_obj->id,
+					  "component", "admin",
+					  "settings") ))
+	    {
+	      ////////////////////hmmmmmmmm......... !!!
+	      //error_quit("show_content()", "new button_class()", TRUE);
+	    }
+	  print("<td>");
+	}
+
+      print("</tr></table>\n");
   
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
@@ -271,9 +323,10 @@ class content_component_class
 		"</font></b><br><br>\n");
 	}
 
-      //display content title
-      if($this->component->sql_component_obj->title_align == "center")
-	echo("<center>");
+      if($this->component->sql_component_obj->title)
+	//display content title
+	if($this->component->sql_component_obj->title_align == "center")
+	  echo("<center>");
   
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
@@ -294,14 +347,17 @@ class content_component_class
 			   $this->component->sql_component_obj->title, NULL);
 	}
       else
-	print("<font size=+".$this->component->sql_component_obj->title_font_size." ".
-	      "face=".$compO->title_font_face."> ".
-	      $this->component->sql_component_obj->title." </font>\n");
+	if($this->component->sql_component_obj->title)
+	  print("<font size=+".$this->component->sql_component_obj->title_font_size." ".
+		"face=".$compO->title_font_face."> ".
+		$this->component->sql_component_obj->title." </font>\n");
 
-      if($this->component->sql_component_obj->title_align == "center")
-	print("</center>\n");
+      if($this->component->sql_component_obj->title)
+	if($this->component->sql_component_obj->title_align == "center")
+	  print("</center>\n");
   
-      echo("<br>\n");
+      if($this->component->sql_component_obj->title)
+	echo("<br>\n");
   
       //display content image
 
@@ -392,5 +448,30 @@ class content_component_class
       $message->action = "edit";
     }
 
+  function add($message, $ref_id)
+    {
+	$query_str = "select * from content_component order by ref_id desc";
+      
+	if( ! $cont = mysql_query("$query_str") )
+	  error_quit("content_component_class", "select content", TRUE);
+
+	if(! $contO = mysql_fetch_object($cont) )
+	  error_quit("content_component_class", "fetch content", TRUE);
+
+	$query_str = "insert into content_component set page_id = $message->page_id, ".
+	  "component_id = $message->component_id, ref_id = $ref_id";
+
+	if(! ($result = mysql_query($query_str)) )
+	  error_quit("content_component_class", "add", TRUE);
+    }
+
+  function delete($message)
+    {
+      $query_str = "delete from content_component where component_id = ".
+	"$message->component_id";
+
+	if(! ($result = mysql_query($query_str)) )
+	  error_quit("content_component_class", "delete", TRUE);
+    }
 }
 ?>

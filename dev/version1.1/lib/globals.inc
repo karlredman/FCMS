@@ -23,9 +23,12 @@ $home_image="$fcms_images_path/home.gif";
 $back_image="$fcms_images_path/back.gif";
 
 $cancel_image="$fcms_images_path/cancel.gif";
+$delete_image="$fcms_images_path/delete.gif";
 
 $add_component_image="$fcms_images_path/addComponent.gif";
 $addPage_image="$fcms_images_path/addPage.gif";
+
+$admnPage_image="$fcms_images_path/admnPage.gif";
 
 $delete_component_image="$fcms_images_path/deleteComponent.gif";
 $delete_page_image="$fcms_images_path/deletePage.gif";
@@ -35,7 +38,7 @@ $editHost_image="$fcms_images_path/editHost.gif";
 $editSite_image="$fcms_images_path/editSite.gif";
 $editPage_image="$fcms_images_path/editPage.gif";
 
-
+$settings_image="$fcms_images_path/settings.gif";
 $login_image="$fcms_images_path/login.gif";
 $logout_image="$fcms_images_path/logout.gif";
 
