@@ -26,7 +26,7 @@ class host_class
 
 
       //get host data
-      if(! ($this->sql_host=mysql_query("select * from host where host_id = $this->id")) )
+      if(! ($this->sql_host=mysql_query("select * from host where id = $this->id")) )
      	error_quit("mysql_query()", "host_class::():sql_host", TRUE );
 
       if(! ($this->sql_host_obj=mysql_fetch_object($this->sql_host)) ) 
