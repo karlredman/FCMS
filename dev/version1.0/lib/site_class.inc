@@ -16,7 +16,7 @@ class site_class
       $this->message = &$message;
 
       //get site data
-      if(! ($this->sql_site=mysql_query("select * from site where site_id = $this->id")) )
+      if(! ($this->sql_site=mysql_query("select * from site where id = $this->id")) )
      	error_quit("mysql_query()", "site_class::():sql_site", TRUE );
 
       if(! ($this->sql_site_obj=mysql_fetch_object($this->sql_site)) ) 

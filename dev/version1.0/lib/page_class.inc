@@ -22,7 +22,7 @@ class page_class
 	{
 	  //use page name for display instead
 
-	  if(! ($this->sql_page=mysql_query("select * from page where page_name = ".
+	  if(! ($this->sql_page=mysql_query("select * from page where file_name = ".
 					    "'$HTTP_GET_VARS[page_name]'")) )
 	    //"'SamplePageTitle2'")) )
 	    error_quit("mysql_query()", "site_class::():sql_page_tans", TRUE );
@@ -35,13 +35,21 @@ class page_class
 	}
       else
 	if(! ($this->sql_page=mysql_query("select * from page ".
-					  "where page_id = $message->page_id")) )
+					  "where id = $message->page_id")) )
 	  { error_quit("mysql_query()", "page_class::():sql_page", TRUE ); }
       
       if(! ($this->sql_page_obj=mysql_fetch_object($this->sql_page)) ) 
 	error_quit("mysql_fetch_object()", "page_class::():sql_page_obj", TRUE );
 
-      $message->page_id = $this->sql_page_obj->page_id;
+      if(!$message->page_id)
+	$message->page_id = $this->sql_page_obj->page_id;
+      
+      if(!$message->mode)
+	{
+	  $message->mode = "page";
+	  $message->action = "display";
+	}
+	
 
      //pump
      $this->pump(&$message);

@@ -9,6 +9,9 @@ class component_class
   var $sql_component;
   var $sql_component_obj;
 
+  var $sql_content_component;
+  var $sql_content_component_obj;
+
   var $id;				//component id
   var $action;				//component action
 
@@ -20,7 +23,8 @@ class component_class
 
       //get site data
       if(! ($this->sql_component=
-	    mysql_query("select * from content where page_id = $message->page_id")) )
+	    mysql_query("select * from component where page_id = $message->page_id ".
+			"order by ref_id")) )
 	{
 	  error_quit("mysql_query()", "component_class::():sql_component", TRUE );
 	}
@@ -28,10 +32,30 @@ class component_class
       if(! ($this->sql_component_obj=mysql_fetch_object($this->sql_component)) ) 
 	error_quit("mysql_fetch_object()", "component_class::():sql_component_obj", TRUE );
 
+      $obj = $this->sql_component_obj;
 
-      //$this->display_default(&$message);
-      //$thing = $this->sql_component_obj;
-      //print("sql_component_obj->title = $thing->title<br>\n");
+      //create the type of component
+      switch ($obj->type)
+	{
+	case content:
+	  if( ! ($this->sql_content_component = 
+		 mysql_query("select * from content_component where page_id = ".
+			     "$message->page_id order by ref_id")) )
+	    {
+	      error_quit("mysql_query()", 
+			 "component_class::():sql_content_component", TRUE );
+	    }
+
+	  if(! ($this->sql_content_component_obj = 
+		mysql_fetch_object($this->sql_content_component)) ) 
+	    {
+	      error_quit("mysql_fetch_object()", 
+			 "component_class::():sql_content_component_obj", TRUE );
+	    }
+	  break;
+	default:
+	  break;
+	}
     }
 
   function destroy()
@@ -52,27 +76,32 @@ class component_class
 	   strstr($message->action, "edit") && 
 	   !$GLOBALS["in_page_editing"])
 	  {
-	    if( $message->component_id == $obj->content_id) 
+
+	    if( $message->component_id == $obj->id) 
 	      {
-		$this->show_content($message, 1);
+		$this->show_content(&$message, 1);
 		return;
 	      }
 	    else 
 	      continue;
 	  }
 
-	$this->show_content($message, 1);
+	$this->show_content(&$message, 1);
     
 	print("<td></tr>\n");
     
-	//err_out("$message->mode");
-
 	//if(strstr($this->mode, "page") &&
 	if(strstr($this->action, "edit") )
 	  { 
 	    print("<hr>\n"); 
 	  }
-      } while($this->sql_component_obj = mysql_fetch_object($this->sql_component));
+
+
+      } while($this->sql_component_obj = 
+	      mysql_fetch_object($this->sql_component) &&
+	      $this->sql_content_component_obj = 
+	      mysql_fetch_object($this->sql_content_component) 
+	      );
     }
 
   function display_doubled($message)
@@ -190,6 +219,8 @@ class component_class
       //display a component of type content
 
       $obj = $this->sql_component_obj;
+      $objc = $this->sql_content_component_obj;
+
 
       if($this->mode == "page" &&
 	 $this->action == "edit" &&
@@ -199,18 +230,18 @@ class component_class
 
 	  if(!($button = new button_class($message->host_id, $message->site_id, 
 					  $message->page_id, $message->referp_id,
-					  $obj->content_id,
+					  $obj->id,
 					  "component", "edit",
 					  "edit") ))
 	    {
-	      ////////////////////hmmmmmmmm.........
+	      ////////////////////hmmmmmmmm......... !!!
 	      //error_quit("show_content()", "new button_class()", TRUE);
 	    }
 	}
   
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->content_id &&
+	 $message->component_id == $obj->id &&
 	 $GLOBALS[authorized]) 
 	{
 	  //tell user what we are doing
@@ -228,7 +259,7 @@ class component_class
 
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->content_id &&
+	 $message->component_id == $obj->id &&
 	 $GLOBALS[authorized]) 
 	{
 	  //open a form around the content
@@ -254,28 +285,27 @@ class component_class
       //display content image
 
       //display content body
-      if($obj->body_align == "center")
+      if($objc->body_align == "center")
 	echo("<center>\n");
 
-	  
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->content_id&&
+	 $message->component_id == $obj->id &&
 	 $GLOBALS[authorized]) 
 	{
 	  //show edit box for body
 	  if($wide)
-	    form_add_textarea("content_body", $this->sql_component_obj->body, 
+	    form_add_textarea("content_body", $objc->body, 
 			      80, NULL);
 	  else
-	    form_add_textarea("content_body", $this->sql_component_obj->body, 
+	    form_add_textarea("content_body", $objc->body, 
 			      NULL, NULL);
 
 	  //put buttons below box
 	  print("<br>\n");
 	  
 	  //close center -buttons go on the right
-	  if($obj->body_align == "center")
+	  if($objc->body_align == "center")
 	    print("</center>\n");
 
 	  //show a submit button
@@ -291,12 +321,12 @@ class component_class
       else
 	{
 	  //convert body to html
-	  $body = txt2html($obj->body);
-	  print("<font size=$obj->body_font_size ".
-		"face=$obj->body_font_face> $body </font>\n");
+	  $body = txt2html($objc->body);
+	  print("<font size=$objc->body_font_size ".
+		"face=$objc->body_font_face> $body </font>\n");
 	}
   
-      if($obj->body_align == "center")
+      if($objc->body_align == "center")
 	echo("</center>\n"); 
     }
 
@@ -308,15 +338,21 @@ class component_class
 
       //make query string
       $title=$HTTP_POST_VARS["content_title"];
-      $body=$HTTP_POST_VARS[content_body];
+      $body=$HTTP_POST_VARS["content_body"];
 
-      $query_str="update content set body='$body',".
-	" title=\"$title\"".
-	" where content_id=$message->component_id";
+      $query_str="update component set title='$title'".
+	" where id=$message->component_id";
 
       if(! ($result = mysql_query($query_str)) )
 	if(! ($result = mysql_query($query_str)) )
-	  error_quit("component_class()", "save_content():mysql_query()", TRUE);
+	  error_quit("component_class()", "save_content():mysql_query():1", TRUE);
+
+      $query_str="update content_component set body='$body'".
+	" where component_id=$message->component_id";
+
+      if(! ($result = mysql_query($query_str)) )
+	if(! ($result = mysql_query($query_str)) )
+	  error_quit("component_class()", "save_content():mysql_query():2", TRUE);
 
       //change mode to page edit
       $message->mode = "page";
