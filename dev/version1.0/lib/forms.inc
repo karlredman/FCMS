@@ -123,9 +123,8 @@ function form_image_link($form_action,
 	    $page_id, $referp_id,
 	    $component_id,
 	    $mode, $action);
-
   print("<input  type=image
-		src=$image_file>\n");    
+	  	src=$image_file>\n");    
 
   form_close();
 }

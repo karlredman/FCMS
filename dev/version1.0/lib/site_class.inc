@@ -35,6 +35,9 @@ class site_class
   
   function run($message)
     {
+      //handle site errors and such
+      $this->pump(&$message);
+
       $this->message=&$message;
 
       //do page stuff
@@ -76,7 +79,8 @@ class site_class
 	  //default button type
 	  $btn_type = "back";
 
-	  if($message->action == "edit")
+	  if($message->action == "edit" &&
+	     $GLOBALS[authorized])
 	    {
 	      $page_id = $message->page_id;
 	      $referp_id = $message->referp_id;
@@ -93,11 +97,13 @@ class site_class
 		    break;
 		    
 		case "page":
-		  $mode = $message->page;
+		  //$mode = $message->page;
+		  $mode = "page";
 		  $action = "display";
 		  break;
 		default:
-		  $mode = $message->page;
+		  //$mode = $message->page;
+		  $mode = "page";
 		  $action = $message->action;
 		  break;
 		}
@@ -129,7 +135,7 @@ class site_class
 	}
           
       //show home button
-      if($message->action == edit &&
+      if($message->action == "edit" &&
 	 $message->page_id == $obj->homepage_id )
 	{
 	  print("<td>");
@@ -202,5 +208,51 @@ class site_class
       //close page
       html_end();
     }
-}
+
+  function pump($message)
+    {
+      global $HTTP_SERVER_VARS;
+
+
+      //handler server errors
+
+      if($HTTP_SERVER_VARS[REDIRECT_STATUS] == "404")
+	{
+	  //get array from redirect
+	  $redirect = explode("/", $HTTP_SERVER_VARS[REDIRECT_URL]);
+	  $len = sizeof($redirect)-1;
+	  
+	  //set page_name if valid
+	  $page_name = explode(".", $redirect[$len]);
+	  
+	  //validate page_name with possible *.html or *.html extension 
+	  // -should handle shtml and shtm in the future
+	  if( $page_name[1] != "html" && $page_name[1] != "htm")  
+	    { 
+	      //bad file name -use custom 404 handler 
+	      header("Location: index.php?error=404?$redirect[$len]");
+	      exit;
+	    }
+
+	  $query_str = "";
+
+	  //page_name is set, continue on.
+	  if($page_name[0] == "home" || $page_name[0] == "index")
+	    {
+	      if($HTTP_SERVER_VARS[REDIRECT_QUERY_STRING])
+		$query_str = "?".$HTTP_SERVER_VARS[REDIRECT_QUERY_STRING];
+	    }
+	  else 
+	    {
+	      if($HTTP_SERVER_VARS[REDIRECT_QUERY_STRING])
+		$query_str = "?page_name=$page_name[0]&".
+		  $HTTP_SERVER_VARS[REDIRECT_QUERY_STRING];
+	      else
+		$query_str = "?page_name=$page_name[0]";
+	    }
+
+	  header("Location: index.php"."$query_str");
+	}
+    }
+}//end class
 ?>

@@ -91,3 +91,20 @@ other_info	:other info
 
 
 	master account: fcms_host_admin -default host level access (top - level)
+
+
+
+
+
+
+
+
+
+
+
+____________________________________________________________________
+robot-help:	-interprets a url for a site(translation table for robots, and people)
+id		:page record id
+page_id		:page_id
+page_title	:page title
+url		:page url (virtual)

@@ -11,17 +11,37 @@ class page_class
 {
   function page_class($message)
     { 
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
       $this->id = $message->page_id; 
       $this->site_id = $message->site_id;
       $this->message = $message;
       
       //get page data
-      if(! ($this->sql_page=mysql_query("select * from page ".
-					"where page_id = $message->page_id")) )
-	{ error_quit("mysql_query()", "page_class::():sql_page", TRUE ); }
+      if($HTTP_GET_VARS[page_name] && !$HTTP_POST_VARS[mode])
+	{
+	  //use page name for display instead
+
+	  if(! ($this->sql_page=mysql_query("select * from page where page_name = ".
+					    "'$HTTP_GET_VARS[page_name]'")) )
+	    //"'SamplePageTitle2'")) )
+	    error_quit("mysql_query()", "site_class::():sql_page_tans", TRUE );
+
+	  $message->mode = "page";
+	  $message->action = "display";
+
+	  if($HTTP_GET_VARS[referp_id])
+	    $message->referp_id = $HTTP_GET_VARS[referp_id];
+	}
+      else
+	if(! ($this->sql_page=mysql_query("select * from page ".
+					  "where page_id = $message->page_id")) )
+	  { error_quit("mysql_query()", "page_class::():sql_page", TRUE ); }
       
       if(! ($this->sql_page_obj=mysql_fetch_object($this->sql_page)) ) 
 	error_quit("mysql_fetch_object()", "page_class::():sql_page_obj", TRUE );
+
+      $message->page_id = $this->sql_page_obj->page_id;
 
      //pump
      $this->pump(&$message);
@@ -139,11 +159,18 @@ class page_class
 	  switch($message->action)
 	    {
 	    case admin:
+	      if($GLOBALS[authorized])
+	      {
+		
+	      }
 	      break;
 	    case edit:
-	      //display_page_heading("fcms: Edit Page");
-	      $this->component = new component_class(&$message);
-	      $this->display_contents_by_page_type();
+	      if($GLOBALS[authorized])
+	      {
+		//display_page_heading("fcms: Edit Page");
+		$this->component = new component_class(&$message);
+		$this->display_contents_by_page_type();
+	      }
 	      break;
 	    case display:
 	    default:
@@ -157,13 +184,21 @@ class page_class
 	  switch($message->action)
 	    {
 	    case admin:
+	      if($GLOBALS[authorized])
+	      {
+	      }
 	      break;
 	    case edit:
+	      if($GLOBALS[authorized])
+	      {
 	      //display_page_heading();
 	      $this->component = new component_class(&$message);
-		$this->display_contents_by_page_type();
+	      $this->display_contents_by_page_type();
+	      }
 	      break;
 	    case save:
+	      if($GLOBALS[authorized])
+	      {
 	      //create a component
 	      $this->component = new component_class(&$message);
 
@@ -172,6 +207,7 @@ class page_class
 	      
 	      //redisplay page after save
 	      $this->pump(&$message);
+	      }
 	      break;
 	    }
 	  break;

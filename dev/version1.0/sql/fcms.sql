@@ -4,6 +4,10 @@
 ---------------------------------------------------------
 -- Server version	3.23.48-Max-log
 
+drop database if exists fcms;
+create database fcms;
+use fcms;
+
 --
 -- Table structure for table 'content'
 --
@@ -85,6 +89,7 @@ CREATE TABLE page (
   ref_id int(11) default NULL,
   parent_id int(11) default NULL,
   type varchar(50) NOT NULL default '',
+  page_name varchar(100) default NULL,
   page_title varchar(100) default NULL,
   page_heading varchar(100) default NULL,
   title_font_size int(11) default NULL,
@@ -94,7 +99,8 @@ CREATE TABLE page (
   email_contact varchar(100) default NULL,
   telephone_contact varchar(20) default NULL,
   code int(24) NOT NULL default '0',
-  PRIMARY KEY  (page_id)
+  PRIMARY KEY  (page_id),
+  KEY  (page_name)
 ) TYPE=MyISAM;
 
 --
@@ -102,10 +108,10 @@ CREATE TABLE page (
 --
 
 
-INSERT INTO page VALUES (1,1,0,0,'default','FCMS Home Page','FCMS: <br>Friendly Content Management System',20,'times','left',1048014082,'parasyte@thing.stuff','7739350834',0);
-INSERT INTO page VALUES (2,1,1,0,'doubled','Sample Page Title 2','Sample Page 2',20,'times','center',1048014082,'parasyte@thing.stuff','7739350834',0);
-INSERT INTO page VALUES (3,1,2,0,'staggared_reverse','Sample Page Title 3','Sample Page 3',20,'times','center',1048014082,'parasyte@thing.stuff','7739350834',0);
-INSERT INTO page VALUES (4,1,3,0,'staggared','Sample Page Title 4','Sample Heading: Page 4',20,'times','center',1048014082,'parasyte@thing.stuff','7739350834',0);
+INSERT INTO page VALUES (1,1,0,0,'default','FCMSHomePage','FCMS Home Page','FCMS: <br>Friendly Content Management System',20,'times','left',1048014082,'parasyte@thing.stuff','7739350834',0);
+INSERT INTO page VALUES (2,1,1,0,'doubled','SamplePageTitle2','Sample Page Title 2','Sample Page 2',20,'times','center',1048014082,'parasyte@thing.stuff','7739350834',0);
+INSERT INTO page VALUES (3,1,2,0,'staggared_reverse','SamplePageTitle3','Sample Page Title 3','Sample Page 3',20,'times','center',1048014082,'parasyte@thing.stuff','7739350834',0);
+INSERT INTO page VALUES (4,1,3,0,'staggared','SamplePageTitle4','Sample Page Title 4','Sample Heading: Page 4',20,'times','center',1048014082,'parasyte@thing.stuff','7739350834',0);
 
 --
 -- Table structure for table 'site'

@@ -57,8 +57,9 @@ function fcms_run()
 	  //set default page display message (the buttons will do the
 	  //rest)
 	  $message = new message_class($GLOBALS["host_id"], $GLOBALS["site_id"], 
-				       $HTTP_GET_VARS["page_id"], NULL, NULL, 
-				       "page", "display", NULL, NULL);
+				       $HTTP_GET_VARS["page_id"], 
+				       $HTTP_GET_VARS["referp_id"],
+				       NULL, "page", "display", NULL, NULL);
 
 	  $host = new host_class(&$message);
 	}

@@ -5,7 +5,6 @@ include_once("globals.inc");
 include_once("error.inc");
 include_once("forms.inc");
 
-
 /* Note:
 	Remember, a button is actually just a form with an image. All
 	program flow buttons must send state information back to the

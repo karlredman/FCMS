@@ -192,7 +192,8 @@ class component_class
       $obj = $this->sql_component_obj;
 
       if($this->mode == "page" &&
-	 $this->action == "edit")
+	 $this->action == "edit" &&
+	 $GLOBALS[authorized]) 
 	{
 	  //button_show_edit("edit_content_item", $this->sql_component_obj->content_id);
 
@@ -209,7 +210,8 @@ class component_class
   
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->content_id) 
+	 $message->component_id == $obj->content_id &&
+	 $GLOBALS[authorized]) 
 	{
 	  //tell user what we are doing
 	  print("<b><font size=+2 >".
@@ -226,20 +228,19 @@ class component_class
 
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->content_id) 
+	 $message->component_id == $obj->content_id &&
+	 $GLOBALS[authorized]) 
 	{
 	  //open a form around the content
 	  form_open(NULL);
-
+	  
 	  //setup standard variables (save in the current mode)
 	  form_std($message->host_id, $message->site_id, 
-		  $message->page_id, $message->referp_id,
+		   $message->page_id, $message->referp_id,
 		   $message->component_id,
-		  $message->mode, "save");
-
+		   $message->mode, "save");
+	  
 	  form_add_textbox("content_title", $obj->title, NULL);
-
-
 	}
       else
 	print("<font size=+$obj->title_font_size face=$obj->title_font_face> ".
@@ -259,7 +260,8 @@ class component_class
 	  
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->content_id) 
+	 $message->component_id == $obj->content_id&&
+	 $GLOBALS[authorized]) 
 	{
 	  //show edit box for body
 	  if($wide)
