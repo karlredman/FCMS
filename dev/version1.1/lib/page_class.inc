@@ -39,8 +39,6 @@ class page_class
 	  if(!$x)
 	    $x=$thing[0];
 
-	  //err_out("page name =                    <br> ".$x);
-
 	  if(! ($this->sql_page=mysql_query("select * from page where file_name = ".
 					    "'$x'")) )
 	    //"'".$HTTP_GET_VARS[page_name]."'")) )
@@ -56,8 +54,6 @@ class page_class
 	    //{
 	  if(! ($this->sql_page_obj=mysql_fetch_object($this->sql_page)) ) 
 	    {
-	      //err_out("got here:".$this->sql_page_obj[0].":".$HTTP_GET_VARS[page_name]);
-	      //$message->dump();
 	      error_quit("mysql_fetch_object()", "page_class::():sql_page_obj", TRUE );
 	      exit;
 	    }
@@ -75,7 +71,6 @@ class page_class
 
 	  $thing = explode("\"", $message->page_id);
 	  $message->page_id = $thing[0];
-	  //err_out("select * from page "."where id = ".$message->page_id);
 
 	  if(! ($this->sql_page=mysql_query("select * from page ".
 					    "where id = ".$message->page_id)) )
@@ -167,8 +162,6 @@ class page_class
 	" ref_id = ".$ref_id.",".
 	" parent = ".$pO->ref_id;
 	//" last_updated = 0".","
-
-      //err_out(" ref_id = ".$ref_id." parent = ".$pO->ref_id);
 
 	if(! ($result = mysql_query($query_str)) )
 	  error_quit("page_class", "add():insert page", TRUE);

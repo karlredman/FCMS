@@ -40,8 +40,6 @@ function SC_handle_404($site_obj)
       $page_name = explode(".", $redirect[$len]);
 	  
 
-      //    err_out("page_name = $page_name[0]");
-
       //validate page_name with possible *.html or *.html extension 
       // -should handle shtml and shtm in the future
       if( $page_name[1] != "html" && $page_name[1] != "htm")  

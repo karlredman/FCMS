@@ -41,7 +41,7 @@ class componentSet_class
       $ref_id;
       
       //add component
-      $this->component->add(&$message, &$ref_id, "content");
+      $this->component->add(&$message, &$ref_id, "content", FALSE);
       
       //add content
       $this->type_component->add(&$message, $ref_id);
@@ -63,6 +63,22 @@ class componentSet_class
       $message->mode = "page";
       $message->action = "edit";
       $message->component_id = "";
+    }
+
+  function insert($message)
+    {
+      //NEED TYPE!!!
+
+      //insert into component (sets message->component_id)
+      $ref_id = $this->component->insert(&$message);
+
+      //insert into type_component
+      $this->type_component->insert(&$message, $ref_id);
+
+      //set message for component edit
+      $message->mode = "component";
+      $message->action = "edit";
+      
     }
 }
 

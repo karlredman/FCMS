@@ -43,23 +43,6 @@ class content_component_class
 	mysql_free_result($this->sql_site);
     }
 
-  function xdisplay_default($message)
-    {
-      do{ 
-	//$this->show_content(&$message,1);
-
-	//$x = $this->component->sql_component_obj->title;
-	//err_out("$x");
-
-	err_out($this->component->sql_component_obj->title);
-	err_out($this->sql_content_obj->body);
-
-	$this->sql_content_obj= mysql_fetch_object($this->sql_content);
-
-      } while($this->component->sql_component_obj = 
-	      mysql_fetch_object($this->component->sql_component));
-	  // && $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
-    }
 
   function display_default($message)
     {
@@ -85,7 +68,6 @@ class content_component_class
 	   !$GLOBALS["in_page_editing"])
 	  {
 
-	    //err_out("display default():".$this->component->sql_component_obj->id); $message->dump(); //exit;
 	    if( $message->component_id == $this->component->sql_component_obj->id) 
 	      {
 		$this->show_content(&$message, 1);
@@ -98,7 +80,6 @@ class content_component_class
 	      }
 	  }
 
-	//err_out("display default():"); $message->dump(); exit;
 	$this->show_content(&$message, 1);
     
 	print("<td></tr>\n");
@@ -253,7 +234,6 @@ class content_component_class
   function show_content($message, $wide)
     {
       //display a component of type content
-  //err_out("show_content():"); $message->dump(); exit;
 
       //table for buttons
       print("<table><tr>\n");
@@ -273,6 +253,22 @@ class content_component_class
 	      //error_quit("show_content()", "new button_class()", TRUE);
 	    }
 	  print("</td>");
+	}
+      if($message->mode == "page" &&
+	 $message->action == "edit" &&
+	 $message->security_level <= 2)
+	{
+	  print("<td>");
+	  if(!($button = new button_class($message->host_id, $message->site_id, 
+					  $message->page_id, $message->referp_id,
+					  $this->component->sql_component_obj->id,
+					  "component", "insert",
+					  "insert") ))
+	    {
+	      ////////////////////hmmmmmmmm......... !!!
+	      //error_quit("show_content()", "new button_class()", TRUE);
+	    }
+	  print("<td>");
 	}
       if($message->mode == "page" &&
 	 $message->action == "edit" &&
@@ -315,7 +311,6 @@ class content_component_class
 	 $message->component_id == $this->component->sql_component_obj->id &&
 	 $message->security_level <= 3) 
 	{
-	  //err_out("show_content():"); $message->dump(); exit;
 	  //tell user what we are doing
 	  print("<b><font size=+2 >".
 		"Editing component ".$this->component->sql_component_obj->ref_id.":".
@@ -376,8 +371,6 @@ class content_component_class
 	  else
 	    $width = NULL;
 
-	  //err_out("content id:".$this->sql_content_obj->id);
-
 	  //$message->component_id == $this->component->sql_component_obj->id) 
 	  if($this->sql_content_obj->body != NULL)
 	    form_add_textarea("content_body", $this->sql_content_obj->body, 
@@ -406,10 +399,15 @@ class content_component_class
       else
 	{
 	  //convert body to html
-	  //err_out("id:".$this->sql_content_obj->id);
-	  $body = txt2html($this->sql_content_obj->body);
-	  print("<font size=".$this->sql_content_obj->body_font_size." ".
-		"face=".$this->sql_content_obj->body_font_face."> ".$body." </font>\n");
+	  if($this->sql_content_obj->body == "")
+	    print("\n");
+	  else
+	    {
+	      $body = txt2html($this->sql_content_obj->body);
+	      
+	      print("<font size=".$this->sql_content_obj->body_font_size." ".
+		    "face=".$this->sql_content_obj->body_font_face."> ".$body." </font>\n");
+	    }
 	}
   
       if($this->sql_content_obj->body_align == "center")
@@ -472,6 +470,54 @@ class content_component_class
 
 	if(! ($result = mysql_query($query_str)) )
 	  error_quit("content_component_class", "delete", TRUE);
+
     }
+
+  function insert($message, $changed_ref_id)
+    {
+      //get last component (by ref_id)
+      $query_str = "select * from content_component ".
+	"where ref_id >= $changed_ref_id order by ref_id";
+      
+      if( ! $comp = mysql_query("$query_str") )
+	error_quit("content_component", "insert():select content", TRUE);
+
+      if(! $compO = mysql_fetch_object($comp) )
+	error_quit("content_component_class", "insert():fetch content", TRUE);
+
+
+      //find this component, reorder the ref_id of each one
+      //(inclusive)
+
+      $go = 0;	//for scope
+
+      do
+	{
+	  //if($compO->component_id == $message->component_id)
+	  if($compO->ref_id == $changed_ref_id 
+	     //&& $comp0->component_id == $message->component_id)
+	     )
+	    {
+	      e();
+	      $go = 1;
+	    }
+
+	  if($go)
+	    {
+	      $new_ref_id = $compO->ref_id+1;
+	      $query_str="update content_component set ref_id=".$new_ref_id." ".
+		"where id=".$compO->id;
+
+	      if(! ($result = mysql_query($query_str)) )
+		if(! ($result = mysql_query($query_str)) )
+		  error_quit("content_component_class()", "insert():update", TRUE);
+	    }
+	
+	} while($compO = mysql_fetch_object($comp));
+
+      //add the new component (after setting message->component_id
+      $this->add(&$message, $changed_ref_id);
+    }
+
 }
 ?>

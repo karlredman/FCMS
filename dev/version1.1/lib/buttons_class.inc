@@ -58,6 +58,9 @@ class button_class
 	case home:
 	  $image = $GLOBALS["home_image"]; 
 	  break; 
+	case insert:
+	  $image = $GLOBALS["insert_image"]; 
+	  break; 
 	case login:
 	  $image = $GLOBALS["login_image"]; 
 	  break; 

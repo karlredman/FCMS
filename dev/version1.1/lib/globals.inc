@@ -38,7 +38,9 @@ $editHost_image="$fcms_images_path/editHost.gif";
 $editSite_image="$fcms_images_path/editSite.gif";
 $editPage_image="$fcms_images_path/editPage.gif";
 
+$insert_image="$fcms_images_path/insert.gif";
 $settings_image="$fcms_images_path/settings.gif";
+
 $login_image="$fcms_images_path/login.gif";
 $logout_image="$fcms_images_path/logout.gif";
 

@@ -139,7 +139,6 @@ function edit_buttons($message)
 				     "add_page");
 	  print("</td>\n");
 	}
-      //err_out("security level: $message->security_level");
     }
 
   //if(0)

@@ -24,15 +24,28 @@ function PC_pump($message, $page_obj)
 
 	  print("<html>");
 	  print("<body>");
+
+	  print("<meta http-equiv=\"Content-Type\" ".
+		"content=\"text/html; charset=iso-8859-1\">");
 	      
 	  form_open(NULL);
 	  form_std( $message->host_id, $message->site_id, 
 		    $message->page_id, $message->referp_id,
 		    $message->component_id,
 		    "authorize", "login");
+
+	if($GLOBALS["debug"])
 	  form_add_textbox("f_user", "fcms_host", NULL);
+	else
+	  form_add_textbox("f_user", NULL, NULL);
+
 	  print("<br>\n");
+
+	if($GLOBALS["debug"])
 	  form_add_passwd("f_pass", "passwd", NULL);
+	else
+	  form_add_passwd("f_pass", NULL, NULL);
+
 	  print("<br>\n");
 	  form_add_submit_reset("Login");
 	  form_close();
@@ -57,7 +70,6 @@ function PC_pump($message, $page_obj)
 	  $page_obj->componentSet->destroy();
 
 	  $message->again = TRUE;
-	  //$message->dump();
 	  break;
 	case admin:
 	  //display page administration page
@@ -79,14 +91,6 @@ function PC_pump($message, $page_obj)
     case component:
       switch($message->action)
 	{
-	case delete:
-	  $page_obj->componentSet = new componentSet_class(&$message);
-	  $page_obj->componentSet->delete(&$message);
-	  $page_obj->componentSet->destroy();
-
-	  $message->again = TRUE;
-	  
-	  break;
 	case add:
 	  $page_obj->componentSet = new componentSet_class(&$message);
 	  $page_obj->componentSet->add(&$message);
@@ -96,10 +100,24 @@ function PC_pump($message, $page_obj)
 	  break;
 	case admin:
 	  break;
+	case delete:
+	  $page_obj->componentSet = new componentSet_class(&$message);
+	  $page_obj->componentSet->delete(&$message);
+	  $page_obj->componentSet->destroy();
+
+	  $message->again = TRUE;
+	  break;
 	case edit:
 	  $page_obj->display_page_heading($message, "fcms: Component Edit<br>");
 	  $page_obj->componentSet = new componentSet_class(&$message);
 	  $page_obj->display_contents_by_page_type(&$message);
+	  break;
+	case insert:
+	  $page_obj->componentSet = new componentSet_class(&$message);
+	  $page_obj->componentSet->insert(&$message);
+	  $page_obj->componentSet->destroy();
+
+	  $message->again = TRUE;
 	  break;
 	case save:
 	      //create a component
