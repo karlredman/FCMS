@@ -65,7 +65,7 @@ class page_class
   */
       
       //account for in page editing
-      if($GLOBALS["in_page_editing"])
+      if(!$GLOBALS["in_page_editing"])
 	$theme="default";
       
       switch ($theme) {
