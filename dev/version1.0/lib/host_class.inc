@@ -73,7 +73,7 @@ class host_class
 	      return TRUE;
 	      break;
 	    case "login":
-	      if($HTTP_POST_VARS["f_user"] == "parasyte")
+	      if($HTTP_POST_VARS["f_user"] == "fcms_host")
 		{
 		  //start a session
 		  session_start();
@@ -111,7 +111,7 @@ class host_class
 	default:
 	  if(!$GLOBALS["authorized"])
 	    {
-	      if($HTTP_SESSION_VARS["session_user_name"] == "parasyte")
+	      if($HTTP_SESSION_VARS["session_user_name"] == "fcms_host")
 		{
 		  $GLOBALS["authorized"] = TRUE;
 		}

@@ -145,11 +145,11 @@ class page_class
 			$message->page_id, $message->referp_id,
 			$message->component_id,
 			"authorize", "login");
-	      form_add_textbox("f_user", "parasyte", NULL);
+	      form_add_textbox("f_user", "fcms_host", NULL);
 	      print("<br>\n");
-	      form_add_passwd("f_pass", NULL, NULL);
+	      form_add_passwd("f_pass", "password", NULL);
 	      print("<br>\n");
-	      form_add_submit_reset("LOGIN");
+	      form_add_submit_reset("Login");
 	      form_close();
 	      
 	      print("</body>");

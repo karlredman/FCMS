@@ -2,7 +2,8 @@
 /* page_class_sup.inc
  */
 
-include("buttons_show.inc");
+include_once("componentSet_class.inc");
+include_once("buttons_show.inc");
 
 function PC_pump($message, $page_obj)
 {
@@ -29,7 +30,7 @@ function PC_pump($message, $page_obj)
 		    "authorize", "login");
 	  form_add_textbox("f_user", "fcms_host", NULL);
 	  print("<br>\n");
-	  form_add_passwd("f_pass", "password", NULL);
+	  form_add_passwd("f_pass", "passwd", NULL);
 	  print("<br>\n");
 	  form_add_submit_reset("Login");
 	  form_close();
@@ -53,13 +54,13 @@ function PC_pump($message, $page_obj)
 	case edit:
 	  //display_page_heading("fcms: Edit Page");
 	  $page_obj->componentSet = new componentSet_class(&$message);
-	  $page_obj->display_contents_by_page_type();
+	  $page_obj->display_contents_by_page_type(&$message);
 	  break;
 	case display:
 	default:
 	  //display_page_heading();
 	  $page_obj->componentSet = new componentSet_class(&$message);
-	  $page_obj->display_contents_by_page_type();
+	  $page_obj->display_contents_by_page_type(&$message);
 	  break;
 	}
       break;
@@ -71,14 +72,14 @@ function PC_pump($message, $page_obj)
 	case edit:
 	      //display_page_heading();
 	      $page_obj->componentSet = new componentSet_class(&$message);
-	      $page_obj->display_contents_by_page_type();
+	      $page_obj->display_contents_by_page_type(&$message);
 	  break;
 	case save:
 	      //create a component
 	      $page_obj->componentSet = new componentSet_class(&$message);
 
 	      //save the content type component
-	      $page_obj->component->save_content(&$message);
+	      $page_obj->componentSet->type_component->save_content(&$message);
 	      
 	      //redisplay page after save
 	      $page_obj->pump(&$message);
@@ -104,9 +105,7 @@ function PC_show_navigation($message, $homepage_id)
   home_button(&$message, $homepage_id);
   
   //authourized only navigation
-  editPage_button(&$message);
-  editSite_button(&$message);
-  editHost_button(&$message);
+  edit_buttons(&$message);
 
   //login and logout
   login_button(&$message);
@@ -141,20 +140,23 @@ function PC_display_contents_by_theme($message, $theme, $page_obj)
   //account for in page editing
   if(!$GLOBALS["in_page_editing"])
     $theme="default";
-      
+
+  $componentSet = $page_obj->componentSet;
+  $type_obj = $componentSet->type_component;
+  
   switch ($theme) {
   case "doubled":
-    $page_obj->componentSet->type_component->display_doubled(&$page_obj->message);
+    $type_obj->display_doubled(&$message);
     break;
   case "staggared":
-    $page_obj->componentSet->type_component->display_staggared(&$page_obj->message, "");
+    $type_obj->display_staggared(&$message, "");
   case "staggared_reverse":
-    $page_obj->componentSet->type_component->display_staggared(&$page_obj->message, "reverse");
+    $type_obj->display_staggared(&$message, "reverse");
     break;
   case "default":
   case "noblocks":
   default:
-    $page_obj->componentSet->type_component->display_default(&$page_obj->message);
+    $type_obj->display_default(&$message);
     break;
   }
 }

@@ -198,7 +198,6 @@ class site_class
 	}
 
 
-
       print("</tr>\n");
       print("</table>");
 
