@@ -10,7 +10,7 @@ CONTEXTS:
 host
 site
 page
-content
+component
 init
 run
 
