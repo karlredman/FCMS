@@ -1,0 +1,113 @@
+drop database if exists fcms;
+create database fcms;
+use fcms;
+
+CREATE TABLE host (
+id int(11) NOT NULL auto_increment, 	-- id of host (the toplevel of the hiarchy)
+admin_info blob,			-- admin contact info host-wide
+PRIMARY KEY (id)
+)TYPE=MyISAM;
+
+
+CREATE TABLE site (
+id int(11) NOT NULL auto_increment,		-- site id
+host_id int(11) NOT NULL default '', 		-- id of host to site
+title varchar(100) default NULL,		-- sitewide title (i.e. TUX's Web-O-Vission)
+alias varchar(100) NOT NULL default '',		-- alias of site (i.e. tuxWeb-O-Vision)
+url varchar(100) default NULL,			-- url of site
+homepage_id int(11) NOT NULL default '',	-- page id of home page
+last_updated int(24) default NULL, 		-- date of site update
+updated_by int(11) NOT NULL default '0',	-- id of last user to update page
+header blob,					-- site wide page header
+footer blob,					-- site wide page footer
+contact_name varchar(50) default NULL,		-- site contact name
+contact_phone varchar(25) default NULL,		-- site contact phone
+contact_email varchar(50) default NULL,		-- site contact email
+contact_other blob,				-- other info for conact (specific to page)
+security_level int(11) NOT NULL default '0',	-- security level (i.e host,site,page)
+PRIMARY KEY (id),
+KEY (alias)
+)TYPE=MyISAM;
+
+
+CREATE TABLE page (
+id int(11) NOT NULL auto_increment,		-- page id
+site_id int(11) NOT NULL default '',		-- site id
+ref_id int(11) default NULL, 			-- page refrence # within site (0-n)
+last_updated int(24) default NULL, 		-- date of page update
+updated_by int(11) NOT NULL default '0',	-- id of last user to update page
+page_title varchar(100) default NULL,		-- the page title (i.e Tux is God)
+file_name varchar(100) default NULL,		-- the page name (i.e. TuxisGod)
+parent int(11) default NULL,			-- the parent page id
+theme varchar(50) NOT NULL default '', 		-- page layout theme
+header blob,					-- site wide page header
+footer blob,					-- site wide page footer
+heading varchar(100) default NULL,		-- the text displayed in the page header 
+contact_name varchar(50) default NULL,		-- site contact name
+contact_phone varchar(25) default NULL,		-- site contact phone
+contact_email varchar(50) default NULL,		-- site contact email
+contact_other blob,				-- other info for conact (specific to page)
+security_level int(11) NOT NULL default '0',	-- security level (i.e host,site,page)
+ssl_enable int(11) NOT NULL default '0',	-- should this page be SSL enabled
+PRIMARY KEY  (id),
+KEY  (file_name)
+) TYPE=MyISAM;
+
+
+
+
+CREATE TABLE component(
+id int(11) NOT NULL auto_increment,		-- component id
+site_id int(11) default NULL,			-- site id
+page_id int(11) default NULL,			-- component owner page
+ref_id int(11) default NULL, 			-- component refrence # within page (0-n)
+last_updated int(24) default NULL, 		-- date of component update
+updated_by int(11) NOT NULL default '0',	-- id of last user to update component
+type varchar(50) default NULL,			-- type of component (i.e content, login)
+security_level int(11) NOT NULL default '0',	-- security level (i.e host,site,page)
+title varchar(100) default NULL,		-- title (visable) of component
+title_font_size int(11) default NULL,		-- title font size
+title_font_face varchar(100) default NULL,	-- title font face
+title_align varchar(6) default NULL,		-- title alignment (within component)
+PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE content_component (
+id int(11) NOT NULL auto_increment,		-- component id
+component_id int(11) NOT NULL default '',	-- component id
+body longblob,					-- body of content
+body_font_size int(11) default NULL,		-- body font size
+body_font_face varchar(100) default NULL,	-- body font face
+body_align varchar(6) default NULL,		-- body alignment
+body_color_bg int(11) default '0',		-- body bg color
+body_color_fg int(11) default '0',		-- body fg color
+body_image varchar(100) default NULL,		-- body bg image (name)
+body_link varchar(100) default NULL,		-- body link color
+body_vlink varchar(100) default NULL,		-- body vlink color
+body_alink varchar(100) default NULL,		-- body alink color
+PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+
+
+CREATE TABLE users (
+id int(11) NOT NULL auto_increment,		-- user id
+host_id int(11) default NULL,			-- user belongs to host_id host
+site_id int(11) default NULL,			-- user belongs to site_id site
+user_name varchar(100) default NULL,		-- user name (login name)
+password varchar(100) default NULL,		-- password (encrypted)
+last_login int(24) default NULL, 		-- date of last login
+contact_name varchar(50) default NULL,		-- user contact name
+contact_address1 varchar(100) default NULL, 	-- address line 1 of user
+contact_address2 varchar(100) default NULL, 	-- address line 2 of user
+contact_phone varchar(25) default NULL,		-- user contact phone
+contact_email varchar(50) default NULL,		-- user contact email
+contact_other blob,				-- other info for user 
+security_level int(11) NOT NULL default '0',	-- security level (i.e host,site,page)
+session_id varchar(50) default NULL,		-- session cookie id (for logged in user)
+session_date int(24) default NULL, 		-- date from session cookie update
+PRIMARY KEY  (id),
+KEY (user_name)
+) TYPE=MyISAM;
+
+-- master account: fcms_host_admin -default host level access (top - level)

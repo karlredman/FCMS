@@ -1,0 +1,22 @@
+1. add conf/fcms.conf to Apache configuration chain (see file for details)
+
+2. move fcms/lib to a directory outside of public_html (for security reasons)
+
+3. edit the fcms.php file to reflect the path of the fcms/lib files
+
+4. edit the fcms.php file to reflect the path of the fcms/image files
+
+5. replace images in the fcms/image directory as desired
+
+6. mysql setup
+	a. create sql user,password (fcms,fcms)
+	b. grant user permissions to fcms database for sql-user fcms
+	c. load fcms "seed" database
+
+6.login as admin and change password (for host level password and user access)
+
+
+other considerations:
+ssl - need https handler
+wap - ???
+VXML
