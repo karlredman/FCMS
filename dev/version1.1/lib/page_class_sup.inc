@@ -209,6 +209,8 @@ function PC_display_contents_by_theme($message, $theme, $page_obj)
 
 function PC_display_page_heading($message, $text, $page_obj)
 {
+  html_begin();
+
   if($text)
     $body = $text;
   else
@@ -217,6 +219,8 @@ function PC_display_page_heading($message, $text, $page_obj)
   if($message->mode == "page" &&
      $message->action == "edit")
     {
+      html_head_open("FCMS PAGE EDIT: ".$page->obj->sql_page->title);
+      
       //display an edit button
       if(!($button = new button_class($message->host_id, $message->site_id, 
 				      $message->page_id, $message->referp_id,
@@ -228,6 +232,8 @@ function PC_display_page_heading($message, $text, $page_obj)
 	      //error_quit("show_content()", "new button_class()", TRUE);
 	    }
     }
+  else
+    html_head_open("FCMS PAGE EDIT: ".$page->obj->sql_page->title);
 
   if($page_obj->sql_page_obj->heading_font_align == "center")
     print("<center>\n");

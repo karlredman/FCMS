@@ -128,4 +128,32 @@ function form_image_link($form_action,
 
   form_close();
 }
+
+function form_page_edit_list($form_action,
+			     $host_id, $site_id, 
+			     $page_id, $referp_id,
+			     $component_id,
+			     $mode, $action,
+			     $list)
+{
+  /*
+$list is of the form:
+list->page_id
+		->page_title
+  */
+  
+  form_open($form_action);
+  
+  //form_listbox_open
+
+  //while( list element is not NULL)
+  //{
+  //   form_listbox_append
+  //}
+
+  //form_listbox_close
+
+  form_close();
+
+}
 ?>

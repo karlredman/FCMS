@@ -3,6 +3,9 @@
 -- Host: localhost    Database: fcms
 ---------------------------------------------------------
 -- Server version	3.23.48-Max-log
+DROP DATABASE IF EXISTS fcms;
+CREATE DATABASE fcms;
+USE fcms;
 
 --
 -- Table structure for table 'component'

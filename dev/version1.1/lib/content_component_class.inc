@@ -48,18 +48,8 @@ class content_component_class
     {
       //display contents (default theme)
 
-      $db;
       if($message->again)
-	{
 	  $message->again = FALSE;
-	  
-	  //$db &= $message->LINK;
-	  //$db = new db_class();
-	  
-	  //$this->init($message);
-	  //$this->component->init($message);
-	}
-
 
       do{
 	//for in page editing switch
@@ -82,8 +72,9 @@ class content_component_class
 
 	$this->show_content(&$message, 1);
     
-	print("<td></tr>\n");
-    
+	
+	//print("<td></tr>\n");
+
 	//if(strstr($this->mode, "page") &&
 	if(strstr($message->action, "edit") )
 	  { 
@@ -236,7 +227,9 @@ class content_component_class
       //display a component of type content
 
       //table for buttons
-      print("<table><tr>\n");
+      if($message->mode == "page" &&
+	 $message->action == "edit")
+	{ print("<table><tr>\n"); }
 
       if($message->mode == "page" &&
 	 $message->action == "edit" &&
@@ -268,8 +261,9 @@ class content_component_class
 	      ////////////////////hmmmmmmmm......... !!!
 	      //error_quit("show_content()", "new button_class()", TRUE);
 	    }
-	  print("<td>");
+	  print("</td>");
 	}
+
       if($message->mode == "page" &&
 	 $message->action == "edit" &&
 	 $message->security_level <= 2)
@@ -284,7 +278,7 @@ class content_component_class
 	      ////////////////////hmmmmmmmm......... !!!
 	      //error_quit("show_content()", "new button_class()", TRUE);
 	    }
-	  print("<td>");
+	  print("</td>");
 	}
 
       if($message->mode == "page" &&
@@ -301,10 +295,13 @@ class content_component_class
 	      ////////////////////hmmmmmmmm......... !!!
 	      //error_quit("show_content()", "new button_class()", TRUE);
 	    }
-	  print("<td>");
+	  print("</td>");
 	}
 
-      print("</tr></table>\n");
+      if($message->mode == "page" &&
+	 $message->action == "edit")
+	{ print("</tr></table>\n"); }
+
   
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
@@ -425,7 +422,7 @@ class content_component_class
 
       //make query string
       $title=$HTTP_POST_VARS["content_title"];
-      $body=$HTTP_POST_VARS["content_body"];
+      $body=save_txt($HTTP_POST_VARS["content_body"]);
 
       $query_str="update component set title='".$title."'".
 	" where id=".$message->component_id."";

@@ -11,8 +11,8 @@ function txt2html($text)
         '  '    => '&nbsp; ',
 	//  '<'        => '&lt;',
         //'>'        => '&gt;',
-	'\\'	   => '\\\\',
-        '"'        => '&quot;',
+	'\\'	   => '\\',
+  //      '"'        => '&quot;',
         '!'        => '&#33;',
         '#'        => '&#35;',
         '$'        => '&#36;',
@@ -28,10 +28,12 @@ function txt2html($text)
 function save_txt($text)
 {
   //take care of double quotes
-  $text = str_replace('"','\"', $text); 
-  $text = str_replace('\'','\\\'', $text); 
+//  $text = str_replace('"','\"', $text); 
 
-  //$text = str_replace("\\","\\\\", $text); 
+  $text = str_replace("\\","\\\\", $text); 
+  $text = str_replace("\'","\\\'", $text); 
+
+
   //$text = str_replace('\\',"\\\\", $text); 
   //'\\'	   => '\\\\',
   

@@ -168,8 +168,6 @@ function edit_buttons($message)
     }
 }
 
-
-
 function login_button($message)
 {
   if($message->mode != authorize)
