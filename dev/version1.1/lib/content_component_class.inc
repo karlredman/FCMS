@@ -4,17 +4,17 @@
 
 include("component_class.inc");
 
-class content_component_class component_class
+class content_component_class 
 {
   var $sql_content;
   var $sql_content_obj;
 
   var $component;
 
-  function content_class($message, $component)
+  function content_component_class($message, $component)
     {
       $this->component = $component;
-
+      
       //get content data
 	  if( ! ($this->sql_content= 
 		 mysql_query("select * from content_component where page_id = ".
@@ -25,18 +25,27 @@ class content_component_class component_class
 	    }
 
 	  if(! ($this->sql_content_obj= 
-		mysql_fetch_object($this->sql_content_component)) ) 
+		mysql_fetch_object($this->sql_content)) ) 
 	    {
 	      error_quit("mysql_fetch_object()", 
 			 "component_class::():sql_content_component_obj", TRUE );
 	    }
     }
 
+  function destroy()
+    {
+      if($this->sql_site)
+	mysql_free_result($this->sql_site);
+    }
+
   function display_default($message)
     {
       //display contents (default theme)
       
-      $obj = $(this->component)->sql_component_obj;
+      $component = $this->component;
+      $comp_sql = $component->sql_component;
+      $comp_obj = $component->sql_component_obj;
+
 
       do{
 
@@ -65,17 +74,22 @@ class content_component_class component_class
 	    print("<hr>\n"); 
 	  }
 
+      $component = $this->component;
+      $comp_sql = $component->sql_component;
+      $comp_obj = $component->sql_component_obj;
 
-      } while($(this->component)->sql_component_obj = 
-	      mysql_fetch_object($(this->component)->sql_component) &&
-	      $this->sql_content_obj= 
-	      mysql_fetch_object($this->sql_content) 
-	      );
+      } while($this->component->sql_component_obj = 
+	      mysql_fetch_object($this->component->sql_component) &&
+      $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
     }
 
   function display_doubled($message)
     {
       //display contents (doubled theme)
+
+      $component = $this->component;
+      $comp_sql = $component->sql_component;
+      $comp_obj = $component->sql_component_obj;
 
       if(strstr($message->action, "edit") )
 	print("<table border=1 cellspacing=0 cellpadding=0 width=100%>\n");
@@ -108,8 +122,8 @@ class content_component_class component_class
 
 	  }
 
-      } while($(this->component)->sql_component_obj = 
-	      mysql_fetch_object($(this->component)->sql_component));
+      } while($comp_obj = mysql_fetch_object($comp_sql) &&
+	      $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
 
       print("</table>\n");
     }
@@ -122,6 +136,10 @@ class content_component_class component_class
 		staggared = 2 content-items then one, then two, etc.
 		staggared_reverse = 1 content-item then two, then one, etc.
       */
+
+      $component = $this->component;
+      $comp_sql = $component->sql_component;
+      $comp_obj = $component->sql_component_obj;
 
       //print("<table>\n");
       if(strstr($message->action, "edit") )
@@ -176,8 +194,8 @@ class content_component_class component_class
 	  }
     
 	
-      } while($(this->component)->sql_component_obj = 
-	      mysql_fetch_object($this->sql_component));
+      } while($comp_obj = mysql_fetch_object($comp_sql) &&
+	      $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
     
       print("</table>\n");
 
@@ -187,13 +205,14 @@ class content_component_class component_class
     {
       //display a component of type content
 
-      $obj = $(this->component)->sql_component_obj;
+      $component = $this->component;
+      $obj = $component->sql_component_obj;
       $objc = $this->sql_content_obj;
 
 
       if($message->mode == "page" &&
 	 $message->action == "edit" &&
-	 $GLOBALS[authorized]) 
+	 $message->security_level <= 2)
 	{
 	  //button_show_edit("edit_content_item", $this->sql_component_obj->content_id);
 

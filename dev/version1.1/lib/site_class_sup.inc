@@ -5,14 +5,14 @@
 
 function SC_pump($message)
 {
-  global $HTTP_SERVER_VARS $HTTP_GET_VARS; 
+  global $HTTP_SERVER_VARS, $HTTP_GET_VARS; 
 
   //handler server errors
   switch($HTTP_SERVER_VARS[REDIRECT_STATUS])
     {
     case "404":
       SC_handle_404();
-    break:
+    break;
     }
   
   switch($HTTP_GET_VARS[error])

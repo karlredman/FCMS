@@ -25,7 +25,8 @@ class component_class
 
   function destroy()
     {
-      mysql_free_result($this->sql_component);
+      if($this->sql_component)
+	mysql_free_result($this->sql_component);
     }
 
 }

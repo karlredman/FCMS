@@ -2,6 +2,7 @@
 
 include_once("globals.inc");
 include_once("supportFun.inc");
+
 include_once("error.inc");
 
 include("page_class.inc");
@@ -32,19 +33,23 @@ class site_class
       //handle site errors and such
       $this->pump(&$message);
 
+      $obj = $this->sql_site_obj;
       //set default page if not set yet
       if(!$message->page_id)
-	$message->page_id=&$(this->sql_site_obj)->$homepage_id;
+	$message->page_id=$obj->$homepage_id;
+      
 
       //do page stuff
-      $this->page = new page_class(&$message, $(this->sql_site_obj)->homepage_id);
+      $this->page = new page_class(&$message, $obj->homepage_id);
     }
 
 
   function destroy()
     {
       $this->page->destroy();
-      mysql_free_result($this->sql_site);
+
+      if($this->sql_site)
+	mysql_free_result($this->sql_site);
     }
 
   function pump($message)

@@ -15,12 +15,12 @@ class componentSet_class
     {
       $this->component = new component_class(&$message);
 
-      $obj = $component->sql_component_obj;
+      $obj = $this->component->sql_component_obj;
 
       switch ($obj->type)
 	{
 	case content:
-	  $this->type_component = new content_component_class(&$message, &$component);
+	  $this->type_component = new content_component_class(&$message, &$this->component);
 	  break;
 	default:
 	  break;
@@ -28,7 +28,10 @@ class componentSet_class
     }
 
   function destroy()
-    { }
+    { 
+      $this->type_component->destroy();
+      $this->component->destroy();
+    }
 }
 
 

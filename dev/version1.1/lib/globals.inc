@@ -19,12 +19,20 @@ $in_page_editing = 1;
 /* Note: these are the fcms default images. The button_class offers a
 way of using different images for different buttons if necessary
 */
-$back_image="$fcms_images_path/back.gif";
-$cancel_image="$fcms_images_path/cancel.gif";
-$edit_image="$fcms_images_path/edit.gif";
 $home_image="$fcms_images_path/home.gif";
+$back_image="$fcms_images_path/back.gif";
+
+$cancel_image="$fcms_images_path/cancel.gif";
+
+$edit_image="$fcms_images_path/edit.gif";
+$editHost_image="$fcms_images_path/editHost.gif";
+$editSite_image="$fcms_images_path/editSite.gif";
+$editPage_image="$fcms_images_path/editPage.gif";
+
+
 $login_image="$fcms_images_path/login.gif";
 $logout_image="$fcms_images_path/logout.gif";
+
 $site_logo="$fcms_images_path/logo.gif";
 
 $fcms_logo="$fcms_images_path/fcms_logo.gif";

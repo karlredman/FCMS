@@ -26,40 +26,42 @@ class host_class
   function host_class($message)
     {
       //register session data
-      if($message->mode != "authorize")
-	$this->register_session();
+      $this->register_session(FALSE);
 
       //get host data
-      if(! ($this->sql_host=mysql_query("select * from host where id = $this->id")) )
+      if(! ($this->sql_host=mysql_query("select * from host where id = $message->host_id")) )
      	error_quit("mysql_query()", "host_class::():sql_host", TRUE );
 
       if(! ($this->sql_host_obj=mysql_fetch_object($this->sql_host)) ) 
 	error_quit("mysql_fetch_object()", "host_class::():sql_host_obj", TRUE );
+
 
       //create a new site object so we can check site variables
       $this->site = new site_class(&$message);
 
       //if the pump says pass it on, then do so
       if($this->pump(&$message, &$this))
-	{
-	  $this->site->run(&$message);
-	}
+	$this->site->run(&$message);
+
     }
 
   function destroy()
     {
       //$this->site->destroy();
-      mysql_free_result($this->sql_host);
+      if($this->sql_host)
+	mysql_free_result($this->sql_host);
     }
 
   function pump($message)
-    { HC_pump(&$message); }
+    { return(HC_pump(&$message, &$this)); }
       
-  function register_session()
+  function register_session($doStart)
     {
-      global $HTTP_SESSION_VARS;
+      //global $HTTP_SESSION_VARS;
 
-      session_start();
+      if($doStart)
+	session_start();
+
       session_register("session_id");
       session_register("session_date");
       session_register("session_user_name");

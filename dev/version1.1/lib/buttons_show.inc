@@ -2,7 +2,7 @@
 /* buttons_show.inc
  */
 
-back_button()
+function back_button($message)
 {
   if($message->referp_id ||
      strstr($message->action,"edit") )
@@ -11,7 +11,7 @@ back_button()
       $btn_type = "back";
 
       if($message->action == "edit" &&
-	 $GLOBALS[authorized])
+	 $message->security_level <= 3)
 	{
 	  $page_id = $message->page_id;
 	  $referp_id = $message->referp_id;
@@ -79,7 +79,7 @@ function home_button($message, $homepage_id)
 				 "home");
       print("</td>\n");
     }
-  else if($message->page_id != $obj->homepage_id)
+  else if($message->page_id != $homepage_id)
     {
       print("<td>");
       $button = new button_class($message->host_id, $message->site_id, 
@@ -92,30 +92,58 @@ function home_button($message, $homepage_id)
 
 }
 
-function edit_button($message)
+
+function edit_buttons($message)
 {
   //show edit button
-  if(!strstr($message->action, "edit") && 
-     $GLOBALS["authorized"] == TRUE)
+  if(!strstr($message->action, "edit") )
     {
-      print("<td>");
-      $button = new button_class($message->host_id, $message->site_id, 
-				 $message->page_id, $message->referp_id,
-				 $message->content_id,
-				 "page", "edit",
-				 "edit");
+      //edit host
+      if($message->security_level == 0)
+	{
+	  print("<td>");
+	  $button = new button_class($message->host_id, $message->site_id, 
+				     $message->page_id, $message->referp_id,
+				     $message->content_id,
+				     "host", "edit",
+				     "edit_host");
+	  print("</td>\n");
+	}
 
-      print("</td>\n");
+      if($message->security_level <= 1)
+	{
+	  print("<td>");
+	  $button = new button_class($message->host_id, $message->site_id, 
+				     $message->page_id, $message->referp_id,
+				     $message->content_id,
+				     "site", "edit",
+				     "edit_site");
+	  print("</td>\n");
+	}
+
+      if($message->security_level <= 2)
+	{
+	  print("<td>");
+	  $button = new button_class($message->host_id, $message->site_id, 
+				     $message->page_id, $message->referp_id,
+				     $message->content_id,
+				     "page", "edit",
+				     "edit_page");
+	  print("</td>\n");
+	}
+
+      err_out("security level: $message->security_level");
     }
-
 }
 
-function show_login($message)
+
+
+function login_button($message)
 {
   if($message->mode != authorize)
     {
       print("<td>\n");
-      if(!$GLOBALS["authorized"])
+      if($message->security_level > 2)
 	{
 	  //show login button
 	  $button = new button_class($message->host_id, $message->site_id, 

@@ -31,6 +31,15 @@ class button_class
 	case cancel:
 	  $image = $GLOBALS["cancel_image"]; 
 	  break;
+	case edit_host:
+	  $image = $GLOBALS["editHost_image"]; 
+	  break; 
+	case edit_site:
+	  $image = $GLOBALS["editSite_image"]; 
+	  break; 
+	case edit_page:
+	  $image = $GLOBALS["editPage_image"]; 
+	  break; 
 	case edit:
 	  $image = $GLOBALS["edit_image"]; 
 	  break; 
