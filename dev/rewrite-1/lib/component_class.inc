@@ -29,7 +29,7 @@ class component_class
 	error_quit("mysql_fetch_object()", "component_class::():sql_component_obj", TRUE );
 
 
-      //$this->display_default();
+      //$this->display_default(&$message);
       //$thing = $this->sql_component_obj;
       //print("sql_component_obj->title = $thing->title<br>\n");
     }
@@ -39,17 +39,19 @@ class component_class
       mysql_free_result($this->sql_component);
     }
 
-  function display_default()
+  function display_default($message)
     {
       //display contents (default theme)
+      
+      $obj = $this->sql_component_obj;
 
       do{
-	$this->show_content($this->$sql_component_obj);
+	$this->show_content($message);
     
-	print("<br>\n");
 	print("<td></tr>\n");
     
-	    err_out("$message->mode");
+	//err_out("$message->mode");
+
 	if(strstr($this->mode, "page") &&
 	   strstr($this->action, "edit") )
 	  { 
@@ -59,12 +61,11 @@ class component_class
       } while($this->sql_component_obj = mysql_fetch_object($this->sql_component));
     }
 
-  function display_doubled()
+  function display_doubled($message)
     {
       //display contents (doubled theme)
 
-
-      if(strstr($action, "edit") )
+      if(strstr($this->action, "edit") )
 	print("<table border=1 cellspacing=0 cellpadding=0 width=100%>\n");
       else
 	print("<table border=0 cellspacing=0 cellpadding=0 width=100%>\n");
@@ -81,7 +82,7 @@ class component_class
 
 	//display a content block
 	print("<td>\n");
-	$this->show_content($this->sql_component_obj);
+	$this->show_content(&$message);
 	print("</td>\n");
 
 	if($col == 2)
@@ -100,7 +101,7 @@ class component_class
       print("</table>\n");
     }
 
-  function display_staggared($command)
+  function display_staggared($message, $command)
     {
       //display contents (default theme)
       /*
@@ -133,7 +134,7 @@ class component_class
 	
 	    //display a sql_component block
 	    print("<td>\n");
-	    $this->show_content($this->sql_component_obj);
+	    $this->show_content(&$message);
 	    print("</td>\n");
 	
 	    if($col == 2)
@@ -153,7 +154,7 @@ class component_class
 	    print("<tr>\n");
 	
 	    print("<td colspan=2>\n");
-	    $this->show_content($this->sql_component_obj);
+	    $this->show_content(&$message);
 	    print("</td>\n");
 	
 	    print("</tr>\n");
@@ -170,25 +171,31 @@ class component_class
 	print("<hr>\n");
     }
 
-  function show_content()
+  function show_content($message)
     {
-
       $obj = $this->sql_component_obj;
 
       if($this->mode == "page" &&
 	 $this->action == "edit")
 	{
 	  //button_show_edit("edit_content_item", $this->sql_component_obj->content_id);
-	  print("xx");
 
-	  if(!($button = new button_class($this->mode, $this->action)) )
-	    err_quit("show_content()", "new button_class()", TRUE);
+	  if(!($button = new button_class($message->host_id, $message->site_id, 
+					  $message->page_id, $message->referp_id,
+					  $obj->content_id,
+					  "component", "edit",
+					  "edit") ))
+	    {
+	      ////////////////////hmmmmmmmm.........
+	      //error_quit("show_content()", "new button_class()", TRUE);
+	    }
 	}
   
       //display content title
       if($obj->title_align == "center")
 	echo("<center>");
   
+      //EDITING GOES HERE !!!
 
       echo("<font size=+$obj->title_font_size face=$obj->title_font_face> $obj->title </font>");
 
@@ -206,11 +213,20 @@ class component_class
       //convert body to html
       $body = txt2html($obj->body);
 	  
-      if($GLOBALS["in_page_editing"] && 
-	 strstr($action, "edit_content_item") && 
-	 $component_id == $obj->content_id) 
+      if(strstr($message->mode, "component") && 
+	 strstr($message->action, "edit") && 
+	 $message->component_id == $obj->content_id) 
 	{
+	  err_out("GOT TO COMPONENT EDIT");
 	  //edit_content_item($this->sql_component_obj->title, $body);
+	  form_open(NULL);
+	  form_std($message->host_id, $message->site_id, 
+		  $message->page_id, $message->referp_id,
+		   $message->component_id,
+		  $message->mode, "save");
+	  form_add_textarea("component_body", $body, NULL, NULL);
+	  form_add_submit_reset(NULL);
+	  form_close();
 	}
       else
 	echo("<font size=$obj->body_font_size face=$obj->body_font_face> $body </font>\n");

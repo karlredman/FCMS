@@ -13,6 +13,7 @@ class page_class
     { 
       $this->id = $message->page_id; 
       $this->site_id = $message->site_id;
+      $this->message = $message;
 
       //get page data
      if(! ($this->sql_page=mysql_query("select * from page where page_id = $message->page_id")) )
@@ -36,6 +37,7 @@ class page_class
   
   var $id;				//page id
   var $site_id;
+  var $message;
   var $component;
 
   function destroy()
@@ -65,17 +67,17 @@ class page_class
 
   switch ($theme) {
   case "doubled":
-    $this->component->display_doubled();
+    $this->component->display_doubled(&$this->message);
     break;
   case "staggared":
-    $this->component->display_staggared("");
+    $this->component->display_staggared(&$this->message, "");
   case "staggared_reverse":
-    $this->component->display_staggared("reverse");
+    $this->component->display_staggared(&$this->message, "reverse");
     break;
   case "default":
   case "noblocks":
   default:
-    $this->component->display_default();
+    $this->component->display_default(&$this->message);
     break;
   }
 }
@@ -110,6 +112,13 @@ class page_class
 	    }
 	  break;
 	case component:
+	  switch($message->action)
+	    {
+	    case edit:
+	      $this->component = new component_class(&$message);
+	      $this->display_contents_by_page_type();
+	      break;
+	    }
 	  break;
 	default:
 	  break;

@@ -28,7 +28,13 @@ class site_class
       if(!$message->action)
 	$message->action = "display";
 
-      $this->page = new page_class(&$message);
+      //do
+	//{
+	  //;//do it until we're done
+	  //;//pump()
+	  $this->page = new page_class(&$message);
+    //} while(!$this->page->done());
+	
      
      //$thing = $this->sql_site_obj;
      //print("sql_site_obj->homepage_id = $thing->homepage_id<br>\n");
