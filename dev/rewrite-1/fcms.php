@@ -11,7 +11,7 @@
 
 
 // Edit these for paths (absolute or relative to fcms.php directory)
-$fcms_base_path="/home/parasyte/public_html/Ankh/fcms/dev/rewrite-1";
+$fcms_base_path="/home/parasyte/sandbox/Ankh/fcms/dev/rewrite-1";
 $fcms_lib_path="$fcms_base_path/lib";
 $fcms_images_path="images";
 

@@ -46,6 +46,19 @@ function form_std($host_id, $site_id,
 	");
 }
 
+function form_add_passwd($name, $text, $size)
+{
+  if(!$size)
+    $size = "40";
+  
+  print("
+		<input  type=password
+		        name=$name
+			value=\"$text\"
+			size=$size>\n
+	");
+}
+
 function form_add_textbox($name, $text, $size)
 {
   if(!$size)

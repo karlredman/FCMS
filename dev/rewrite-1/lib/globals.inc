@@ -5,6 +5,9 @@
 //debug mode (turn off for security !!!)
 $debug = 1;
 
+//authorization switch
+$authorized;
+
 //allow for in_page_editing (default is off)
 /* Note: this feature if for the overall fcms infastructure. Stuff
 like WAP and text browsers will be handled internally (probably using

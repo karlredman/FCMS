@@ -1,0 +1,13 @@
+INDEX		: this file
+proof		: fcms proof of concept 
+phase1		: phase 1 development of fcms
+phase2		: phase 2 development of fcms
+phase3		: phase 3 development of fcms
+mycms		: the original conceptual version of fcms
+phase3.bak1	: phase 3  development of fcms (paranoia version)
+alpha-1		: the first semi-working version of fcms
+alpha-2		: hmmm....
+auth		: some authorization example code
+history		: jpegs, etc. related to fcms development
+rewrite-1	: a complete rewrite of alpha2
+version1.0	: copy of rewrite (paranoia version, cvs-tag: v1prerelease)

@@ -46,6 +46,21 @@ class component_class
       $obj = $this->sql_component_obj;
 
       do{
+
+	//for in page editing switch
+	if(strstr($message->mode, "component") && 
+	   strstr($message->action, "edit") && 
+	   !$GLOBALS["in_page_editing"])
+	  {
+	    if( $message->component_id == $obj->content_id) 
+	      {
+		$this->show_content($message, 1);
+		return;
+	      }
+	    else 
+	      continue;
+	  }
+
 	$this->show_content($message, 1);
     
 	print("<td></tr>\n");
@@ -57,7 +72,6 @@ class component_class
 	  { 
 	    print("<hr>\n"); 
 	  }
-
       } while($this->sql_component_obj = mysql_fetch_object($this->sql_component));
     }
 

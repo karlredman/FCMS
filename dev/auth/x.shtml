@@ -1,0 +1,28 @@
+<html>
+<head>
+<basefont face="Verdana">
+</head>
+
+<body>
+
+<center>
+<table border="0" cellspacing="5" cellpadding="5">
+<form action="login.php" method="POST">
+<tr>
+<td>Username</td>
+<td><input type="text" size="10" name="f_user"></td>
+</tr>
+<tr>
+<td>Password</td>
+<td><input type="password" size="10" name="f_pass"></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><input type="submit"
+name="submit" value="Log In"></td> </tr> </form> </table> </center>
+
+<br>
+To continue, <a HREF="index.php?">click here</a>
+</body>
+</html>
+
+

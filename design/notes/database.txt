@@ -19,6 +19,8 @@ contact_other   :other info for conact (specific to page)
 admin_info	:admin contact info, etc.
 name		:sitewide title (SITE_TITLE:PAGE_TITLE)
 heading		:sitewide page heading
+security_level	:security level editing ability (i.e host,site,page)
+
 access		:list of users allowed access
 restricted	:things which are restricted by host level
 ____________________________________________________________________
@@ -31,16 +33,17 @@ ref_id		:page refrence # within site (0-n)
 last_updated	:date of page update
 updated_by	:last user to update page
 parent		:the parent page
-children	:list of child pages
 theme		:page layout
 title		:the page title							
 header		:a page header (does not override site headr)		
 footer		:a page footer (does not override site footer) 	
-heading		:the text displayed in the header 	
-contact_name	:defaults to site_name		
-contact_phone	:defaults to site_phone
-contact_email	:defaults to site_email
+heading		:the text displayed in the header (a one line heading)
+contact_name	:defaults to site contact name 	
+contact_phone	:defaults to site contact phone
+contact_email	:defaults to site contact email
 contact_other	:other info for conact (specific to page)
+security_level	:security level editing ability (i.e. host.site.page)
+
 access		:list of users allowed to edit this page	
 restricted	:number wich represents restriction by site or host levels
 ____________________________________________________________________
@@ -57,6 +60,8 @@ type		:component layout (type of component, i.e content, login, blah)
 heading		:the text displayed as a component header (optional)
 text		:body text for the component (stored as html)
 image		:background image
+security_level	:security level editing ability (i.e. host.site.page)
+
 access		:list of users allowed to edit this page	
 restricted	:number wich represents restriction by page,site,or host levels
 
@@ -73,6 +78,8 @@ id		:user id
 host_id		:host id
 user_name	:user name (login name)
 password	:password
+session_id	:random number from web server (cookie for php session)
+session_date	:date from session cookie
 user_level	:component, page, site, design
 last_login	:date/time of last login
 name		:name of user
@@ -81,3 +88,6 @@ address2	:address line 2 of user
 phone		:phone number list of user
 email		:list of email addreses of user
 other_info	:other info
+
+
+	master account: fcms_host_admin -default host level access (top - level)

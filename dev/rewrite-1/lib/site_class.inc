@@ -8,9 +8,12 @@ include("page_class.inc");
 
 class site_class
 {
+  var $message;
+
   function site_class($message)
     { 
       $this->id = $message->site_id; 
+      $this->message = &$message;
 
       //get site data
       if(! ($this->sql_site=mysql_query("select * from site where site_id = $this->id")) )
@@ -28,24 +31,17 @@ class site_class
 
       if(!$message->action)
 	$message->action = "display";
-
-      //do
-      //{
-      //;//do it until we're done
-      //;//pump()
+    }
+  
+  function run($message)
+    {
+      $this->message=&$message;
 
       //do page stuff
       $this->page = new page_class(&$message);
-
+      
       //show the site footer and close the page
       $this->site_footer(&$message);
-	  
-	  
-      //} while(!$this->page->done());
-	
-     
-      //$thing = $this->sql_site_obj;
-      //print("sql_site_obj->homepage_id = $thing->homepage_id<br>\n");
     }
 
   var $sql_site;
@@ -157,10 +153,8 @@ class site_class
       
 
       //show edit button
-      $authorized = TRUE;
-
       if(!strstr($message->action, "edit") && 
-	 $authorized == TRUE)
+	 $GLOBALS["authorized"] == TRUE)
 	{
 	  print("<td>");
 	  $button = new button_class($message->host_id, $message->site_id, 
@@ -171,6 +165,33 @@ class site_class
 
 	  print("</td>\n");
 	}
+
+      
+      if($message->mode != authorize)
+	{
+	  print("<td>\n");
+	  if(!$GLOBALS["authorized"])
+	    {
+	      //show login button
+	      $button = new button_class($message->host_id, $message->site_id, 
+					 $message->page_id, $message->referp_id,
+					 $message->content_id,
+					 "authorize", "login_form",
+					 "login");
+	    }
+	  else
+	    {
+	      //show logout button
+	      $button = new button_class($message->host_id, $message->site_id, 
+				     $message->page_id, $message->referp_id,
+					 $message->content_id,
+					 "authorize", "logout",
+					 "logout");
+	    }
+	  print("</td>\n");
+	}
+
+
 
       print("</tr>\n");
       print("</table>");

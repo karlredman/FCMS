@@ -14,3 +14,9 @@
 	c. load fcms "seed" database
 
 6.login as admin and change password (for host level password and user access)
+
+
+other considerations:
+ssl - need https handler
+wap - ???
+VXML
