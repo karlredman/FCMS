@@ -15,12 +15,17 @@ function error_quit($function, $message, $quit)
 function err_out($s)
 {
   echo("
-	<br><br>
+	<br>
 	<b>
 	$s	
 	</b>
-	<br><br>
+	<br>
 	");
 	
+}
+
+function e()
+{
+  err_out("GOT HERE");
 }
 ?>

@@ -3,32 +3,34 @@
 -- Host: localhost    Database: fcms
 ---------------------------------------------------------
 -- Server version	3.23.48-Max-log
+
 DROP DATABASE IF EXISTS fcms;
 CREATE DATABASE fcms;
 USE fcms;
-
 --
 -- Table structure for table 'component'
 --
 
 CREATE TABLE component (
-  id int(2) NOT NULL auto_increment,
+  id int(8) NOT NULL auto_increment,
   host_id int(2) NOT NULL default '1',
   site_id int(2) NOT NULL default '1',
-  page_id int(2) NOT NULL default '1',
-  ref_id int(2) default NULL,
-  last_updated int(4) default NULL,
+  page_id int(6) default NULL,
+  ref_id int(8) default NULL,
+  last_updated int(23) default NULL,
   updated_by int(4) NOT NULL default '0',
   type varchar(50) default NULL,
   title varchar(100) default NULL,
-  title_font_size varchar(50) default NULL,
+  title_font_size varchar(50) NOT NULL default '1',
   title_font_bg varchar(6) NOT NULL default 'FFFFFF',
   title_font_fg varchar(6) NOT NULL default '000000',
-  title_font_face varchar(100) default NULL,
-  title_align varchar(6) default NULL,
-  security_level int(1) NOT NULL default '0',
-  PRIMARY KEY(id),
-  KEY(page_id)
+  title_font_face varchar(100) NOT NULL default 'times',
+  title_align varchar(6) NOT NULL default 'center',
+  security_level int(1) NOT NULL default '2',
+  PRIMARY KEY  (id),
+  KEY page_id (page_id),
+  KEY ref_id (ref_id),
+  KEY ref_id_2 (ref_id)
 ) TYPE=MyISAM;
 
 --
@@ -36,32 +38,32 @@ CREATE TABLE component (
 --
 
 
-INSERT INTO component VALUES (1,1,1,1,0,1049508345,0,'content','Sample component 1','3','FFFFFF','000000','times','center',0);
+INSERT INTO component VALUES (1,1,1,1,0,NULL,0,'content','Sample Component Title','1','FFFFFF','000000','times','center',2);
 
 --
 -- Table structure for table 'content_component'
 --
 
 CREATE TABLE content_component (
-  id int(2) NOT NULL auto_increment,
+  id int(8) NOT NULL auto_increment,
   host_id int(2) NOT NULL default '1',
   site_id int(2) NOT NULL default '1',
-  page_id int(2) default NULL,
-  component_id int(2) default NULL,
-  ref_id int(2) default NULL,
+  page_id int(6) default NULL,
+  component_id int(8) default NULL,
+  ref_id int(8) default NULL,
   body longblob,
-  body_font_size varchar(50) default NULL,
+  body_font_size varchar(50) NOT NULL default '1',
   body_color_bg varchar(100) default '0',
   body_color_fg varchar(100) default '0',
-  body_font_face varchar(100) default NULL,
-  body_align varchar(6) default NULL,
+  body_font_face varchar(100) NOT NULL default 'times',
+  body_align varchar(6) NOT NULL default 'center',
   body_image varchar(100) default NULL,
   body_link varchar(100) default NULL,
   body_vlink varchar(100) default NULL,
   body_alink varchar(100) default NULL,
   security_level int(1) NOT NULL default '2',
   PRIMARY KEY  (id),
-  KEY(component_id)
+  KEY component_id (component_id)
 ) TYPE=MyISAM;
 
 --
@@ -69,7 +71,7 @@ CREATE TABLE content_component (
 --
 
 
-INSERT INTO content_component VALUES (1,1,1,1,1,0,'This is a test','1','0','16777215','times','center',NULL,'10092543','10079487','10092543',0);
+INSERT INTO content_component VALUES (1,1,1,1,1,0,'This is a test for fun and profit','1','0','16777215','times','center',NULL,'10092543','10079487','10092543',0);
 
 --
 -- Table structure for table 'host'
@@ -93,15 +95,15 @@ INSERT INTO host VALUES (1,'');
 --
 
 CREATE TABLE page (
-  id int(2) NOT NULL auto_increment,
+  id int(6) NOT NULL auto_increment,
   host_id int(2) NOT NULL default '1',
   site_id int(2) NOT NULL default '1',
-  ref_id int(2) default NULL,
-  last_updated int(4) default NULL,
+  ref_id int(6) default NULL,
+  last_updated int(24) default NULL,
   updated_by int(4) NOT NULL default '0',
   page_title varchar(100) default NULL,
   file_name varchar(100) default NULL,
-  parent int(2) NOT NULL default '0',
+  parent int(6) NOT NULL default '0',
   theme varchar(50) NOT NULL default '',
   header blob,
   footer blob,
@@ -118,7 +120,7 @@ CREATE TABLE page (
   ssl_enable int(1) NOT NULL default '0',
   security_level int(1) NOT NULL default '1',
   PRIMARY KEY  (id),
-  KEY (site_id)
+  KEY site_id (site_id)
 ) TYPE=MyISAM;
 
 --
@@ -176,7 +178,7 @@ CREATE TABLE users (
   contact_phone varchar(25) default NULL,
   contact_email varchar(50) default NULL,
   contact_other blob,
-  security_level int(1) NOT NULL default '0',
+  security_level int(1) NOT NULL default '2',
   session_id varchar(50) default NULL,
   session_date int(4) default NULL,
   PRIMARY KEY  (id),
@@ -189,5 +191,5 @@ CREATE TABLE users (
 --
 
 
-INSERT INTO users VALUES (1,1,1,'fcms_host','passwd',1049508345,NULL,NULL,NULL,NULL,NULL,NULL,0,'',0);
+INSERT INTO users VALUES (1,1,1,'fcms_host','passwd',1049508345,NULL,NULL,NULL,NULL,NULL,NULL,0,'bac1db291a15c527283e1e7a6747800f',43);
 

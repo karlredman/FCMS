@@ -5,13 +5,13 @@
 //debug mode (turn off for security !!!)
 $debug = 0;
 
-//authorization switch
-$authorized;
+//authorization switch -RETURED !!!
+//$authorized;
 
 //allow for in_page_editing (default is off)
 /* Note: this feature if for the overall fcms infastructure. Stuff
 like WAP and text browsers will be handled internally (probably using
-this or another flag like this one
+this or another flag like this one)
 */
 $in_page_editing = 1;
 
@@ -23,6 +23,12 @@ $home_image="$fcms_images_path/home.gif";
 $back_image="$fcms_images_path/back.gif";
 
 $cancel_image="$fcms_images_path/cancel.gif";
+
+$add_component_image="$fcms_images_path/addComponent.gif";
+$addPage_image="$fcms_images_path/addPage.gif";
+
+$delete_component_image="$fcms_images_path/deleteComponent.gif";
+$delete_page_image="$fcms_images_path/deletePage.gif";
 
 $edit_image="$fcms_images_path/edit.gif";
 $editHost_image="$fcms_images_path/editHost.gif";

@@ -25,6 +25,13 @@ class button_class
     {
       switch($type)
 	{
+	case add_component:
+	  //e();
+	  $image = $GLOBALS["add_component_image"]; 
+	  break;
+	case add_page:
+	  $image = $GLOBALS["addPage_image"]; 
+	  break; 
 	case back:
 	  $image = $GLOBALS["back_image"]; 
 	  break; 

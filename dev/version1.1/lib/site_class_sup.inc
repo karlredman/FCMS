@@ -3,7 +3,7 @@
  */
 
 
-function SC_pump($message)
+function SC_pump($message, $site_obj)
 {
   global $HTTP_SERVER_VARS, $HTTP_GET_VARS; 
 
@@ -11,7 +11,7 @@ function SC_pump($message)
   switch($HTTP_SERVER_VARS[REDIRECT_STATUS])
     {
     case "404":
-      SC_handle_404();
+      SC_handle_404(&$site_obj);
     break;
     }
   
@@ -29,8 +29,9 @@ function SC_pump($message)
     }
 }
 
-function SC_handle_404()
+function SC_handle_404($site_obj)
 {
+  global $HTTP_SERVER_VARS, $HTTP_GET_VARS; 
   //get array from redirect
       $redirect = explode("/", $HTTP_SERVER_VARS[REDIRECT_URL]);
       $len = sizeof($redirect)-1;
@@ -38,6 +39,9 @@ function SC_handle_404()
       //set page_name if valid
       $page_name = explode(".", $redirect[$len]);
 	  
+
+      //    err_out("page_name = $page_name[0]");
+
       //validate page_name with possible *.html or *.html extension 
       // -should handle shtml and shtm in the future
       if( $page_name[1] != "html" && $page_name[1] != "htm")  
@@ -67,6 +71,7 @@ function SC_handle_404()
 
       //transfer execution through the main pump again
       header("Location: index.php"."$query_str");
+      //$site_obj->run();
       exit;
 }
 ?>

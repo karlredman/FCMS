@@ -7,6 +7,8 @@ include_once("buttons_show.inc");
 
 function PC_pump($message, $page_obj)
 {
+  //set recursive operating mode to FALSE
+
   switch($message->mode)
     {
     case authorize:
@@ -49,7 +51,16 @@ function PC_pump($message, $page_obj)
     case page:
       switch($message->action)
 	{
+	case add:
+	  $page_obj->componentSet = new componentSet_class(&$message);
+	  $page_obj->add(&$message);
+	  $page_obj->componentSet->destroy();
+
+	  $message->again = TRUE;
+	  //$message->dump();
+	  break;
 	case admin:
+	  //display page administration page
 	  break;
 	case edit:
 	  //display_page_heading("fcms: Edit Page");
@@ -67,9 +78,18 @@ function PC_pump($message, $page_obj)
     case component:
       switch($message->action)
 	{
+	case add:
+	  $page_obj->componentSet = new componentSet_class(&$message);
+	  $page_obj->componentSet->add(&$message);
+	  $page_obj->componentSet->destroy();
+
+	  $message->again = TRUE;
+	  break;
 	case admin:
 	  break;
 	case edit:
+	  //err_out("mode->action: component->edit");
+	  //$message->dump();
 	      //display_page_heading();
 	      $page_obj->componentSet = new componentSet_class(&$message);
 	      $page_obj->display_contents_by_page_type(&$message);

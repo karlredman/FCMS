@@ -16,20 +16,25 @@ class content_component_class
       $this->component = $component;
       
       //get content data
-	  if( ! ($this->sql_content= 
-		 mysql_query("select * from content_component where page_id = ".
-			     "$message->page_id order by ref_id")) )
-	    {
-	      error_quit("mysql_query()", 
-			 "component_class::():sql_content_component", TRUE );
-	    }
+      $this->init(&$message);
+    }
 
-	  if(! ($this->sql_content_obj= 
+  function init($message)
+    {
+      if( ! ($this->sql_content= 
+	     mysql_query("select * from content_component where page_id = ".
+			 "$message->page_id order by ref_id")) )
+	{
+	  error_quit("mysql_query()", 
+		     "component_class::():sql_content_component", TRUE );
+	}
+      
+      if(! ($this->sql_content_obj= 
 		mysql_fetch_object($this->sql_content)) ) 
-	    {
-	      error_quit("mysql_fetch_object()", 
-			 "component_class::():sql_content_component_obj", TRUE );
-	    }
+	{
+	  error_quit("mysql_fetch_object()", 
+		     "component_class::():sql_content_component_obj", TRUE );
+	}
     }
 
   function destroy()
@@ -38,49 +43,81 @@ class content_component_class
 	mysql_free_result($this->sql_site);
     }
 
+  function xdisplay_default($message)
+    {
+      do{ 
+	//$this->show_content(&$message,1);
+
+	//$x = $this->component->sql_component_obj->title;
+	//err_out("$x");
+
+	err_out($this->component->sql_component_obj->title);
+	err_out($this->sql_content_obj->body);
+
+	$this->sql_content_obj= mysql_fetch_object($this->sql_content);
+
+      } while($this->component->sql_component_obj = 
+	      mysql_fetch_object($this->component->sql_component));
+	  // && $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
+    }
+
   function display_default($message)
     {
       //display contents (default theme)
-      
-      $component = $this->component;
-      $comp_sql = $component->sql_component;
-      $comp_obj = $component->sql_component_obj;
+
+      $db;
+      if($message->again)
+	{
+	  $message->again = FALSE;
+	  
+	  //$db &= $message->LINK;
+	  //$db = new db_class();
+	  
+	  //$this->init($message);
+	  //$this->component->init($message);
+	}
 
 
       do{
-
 	//for in page editing switch
 	if(strstr($message->mode, "component") && 
 	   strstr($message->action, "edit") && 
 	   !$GLOBALS["in_page_editing"])
 	  {
 
-	    if( $message->component_id == $obj->id) 
+	    //err_out("display default():".$this->component->sql_component_obj->id); $message->dump(); //exit;
+	    if( $message->component_id == $this->component->sql_component_obj->id) 
 	      {
 		$this->show_content(&$message, 1);
 		return;
 	      }
 	    else 
-	      continue;
+	      {
+		$this->sql_content_obj= mysql_fetch_object($this->sql_content);
+		continue;
+	      }
 	  }
 
+	//err_out("display default():"); $message->dump(); exit;
 	$this->show_content(&$message, 1);
     
 	print("<td></tr>\n");
     
 	//if(strstr($this->mode, "page") &&
-	if(strstr($this->action, "edit") )
+	if(strstr($message->action, "edit") )
 	  { 
 	    print("<hr>\n"); 
 	  }
 
-      $component = $this->component;
-      $comp_sql = $component->sql_component;
-      $comp_obj = $component->sql_component_obj;
+	///} while($comp_obj = 
+	  	///    mysql_fetch_object($comp_sql) &&
+	  	///    $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
 
+
+	$this->sql_content_obj= mysql_fetch_object($this->sql_content);
       } while($this->component->sql_component_obj = 
-	      mysql_fetch_object($this->component->sql_component) &&
-      $this->sql_content_obj= mysql_fetch_object($this->sql_content) );
+	      mysql_fetch_object($this->component->sql_component) );
+      //&& $this->sql_content_obj= mysql_fetch_object($this->sql_content));
     }
 
   function display_doubled($message)
@@ -204,21 +241,15 @@ class content_component_class
   function show_content($message, $wide)
     {
       //display a component of type content
-
-      $component = $this->component;
-      $obj = $component->sql_component_obj;
-      $objc = $this->sql_content_obj;
-
+  //err_out("show_content():"); $message->dump(); exit;
 
       if($message->mode == "page" &&
 	 $message->action == "edit" &&
 	 $message->security_level <= 2)
 	{
-	  //button_show_edit("edit_content_item", $this->sql_component_obj->content_id);
-
 	  if(!($button = new button_class($message->host_id, $message->site_id, 
 					  $message->page_id, $message->referp_id,
-					  $obj->id,
+					  $this->component->sql_component_obj->id,
 					  "component", "edit",
 					  "edit") ))
 	    {
@@ -229,25 +260,24 @@ class content_component_class
   
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->id &&
-	 $GLOBALS[authorized]) 
+	 $message->component_id == $this->component->sql_component_obj->id &&
+	 $message->security_level <= 3) 
 	{
+	  //err_out("show_content():"); $message->dump(); exit;
 	  //tell user what we are doing
 	  print("<b><font size=+2 >".
-		"Editing component $obj->ref_id:".
-		"<br>$obj->title".
+		"Editing component ".$this->component->sql_component_obj->ref_id.":".
+		$this->component->sql_component_obj->title.
 		"</font></b><br><br>\n");
 	}
 
       //display content title
-      if($obj->title_align == "center")
+      if($this->component->sql_component_obj->title_align == "center")
 	echo("<center>");
   
-      //EDITING GOES HERE !!!
-
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->id &&
+	 $message->component_id == $this->component->sql_component_obj->id &&
 	 $message->user_level <= 2)
 	{
 	  //open a form around the content
@@ -256,16 +286,19 @@ class content_component_class
 	  //setup standard variables (save in the current mode)
 	  form_std($message->host_id, $message->site_id, 
 		   $message->page_id, $message->referp_id,
-		   $message->component_id,
-		   $message->mode, "save");
+		   $this->component->sql_component_obj->id,
+		   "component", "save");
+	  //$message->mode, "save");
 	  
-	  form_add_textbox("content_title", $obj->title, NULL);
+	  form_add_textbox("content_title", 
+			   $this->component->sql_component_obj->title, NULL);
 	}
       else
-	print("<font size=+$obj->title_font_size face=$obj->title_font_face> ".
-	      "$obj->title </font>\n");
+	print("<font size=+".$this->component->sql_component_obj->title_font_size." ".
+	      "face=".$compO->title_font_face."> ".
+	      $this->component->sql_component_obj->title." </font>\n");
 
-      if($obj->title_align == "center")
+      if($this->component->sql_component_obj->title_align == "center")
 	print("</center>\n");
   
       echo("<br>\n");
@@ -273,34 +306,42 @@ class content_component_class
       //display content image
 
       //display content body
-      if($objc->body_align == "center")
+      if($this->sql_content_obj->body_align == "center")
 	echo("<center>\n");
 
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
-	 $message->component_id == $obj->id &&
+	 $message->component_id == $this->component->sql_component_obj->id &&
 	 $message->security_level <= 2)
 	{
 	  //show edit box for body
 	  if($wide)
-	    form_add_textarea("content_body", $objc->body, 
-			      80, NULL);
+	    $width = 80;
 	  else
-	    form_add_textarea("content_body", $objc->body, 
-			      NULL, NULL);
+	    $width = NULL;
+
+	  //err_out("content id:".$this->sql_content_obj->id);
+
+	  //$message->component_id == $this->component->sql_component_obj->id) 
+	  if($this->sql_content_obj->body != NULL)
+	    form_add_textarea("content_body", $this->sql_content_obj->body, 
+			      $witdth, NULL);
+	  else
+	    form_add_textarea("content_body", "Sample Content text.",
+			      $width, NULL);
 
 	  //put buttons below box
 	  print("<br>\n");
 	  
 	  //close center -buttons go on the right
-	  if($objc->body_align == "center")
+	  if($this->sql_content_obj->body_align == "center")
 	    print("</center>\n");
 
 	  //show a submit button
 	  form_add_submit_reset(NULL);
 
 	  //open center if needed
-	  if($obj->body_align == "center")
+	  if($this->sql_content_obj->body_align == "center")
 	    print("<center>\n");
 
 	  //close the form
@@ -309,13 +350,17 @@ class content_component_class
       else
 	{
 	  //convert body to html
-	  $body = txt2html($objc->body);
-	  print("<font size=$objc->body_font_size ".
-		"face=$objc->body_font_face> $body </font>\n");
+	  //err_out("id:".$this->sql_content_obj->id);
+	  $body = txt2html($this->sql_content_obj->body);
+	  print("<font size=".$this->sql_content_obj->body_font_size." ".
+		"face=".$this->sql_content_obj->body_font_face."> ".$body." </font>\n");
 	}
   
-      if($objc->body_align == "center")
+      if($this->sql_content_obj->body_align == "center")
 	echo("</center>\n"); 
+
+      //$this->sql_content_obj= mysql_fetch_object($this->sql_content);
+
     }
 
   function save_content($message)
@@ -328,8 +373,8 @@ class content_component_class
       $title=$HTTP_POST_VARS["content_title"];
       $body=$HTTP_POST_VARS["content_body"];
 
-      $query_str="update component set title='$title'".
-	" where id=$message->component_id";
+      $query_str="update component set title='".$title."'".
+	" where id=".$message->component_id."";
 
       if(! ($result = mysql_query($query_str)) )
 	if(! ($result = mysql_query($query_str)) )

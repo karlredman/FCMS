@@ -19,7 +19,8 @@ function txt2html($text)
         '%'        => '&#37;',
         '&'        => '&amp;',
         '?'        => '&#63;',
-        '@'        => '&#64;'
+        '@'        => '&#64;',
+	'\''	   => "'"
         );
     return strtr($text, $xchange);
 }
@@ -28,7 +29,7 @@ function save_txt($text)
 {
   //take care of double quotes
   $text = str_replace('"','\"', $text); 
-  $text = str_replace("\'",'\'', $text); 
+  $text = str_replace('\'','\\\'', $text); 
 
   //$text = str_replace("\\","\\\\", $text); 
   //$text = str_replace('\\',"\\\\", $text); 

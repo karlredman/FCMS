@@ -53,7 +53,7 @@ class site_class
     }
 
   function pump($message)
-    { SC_pump(&$message); }
+    { SC_pump(&$message, &$this); }
 
 }//end class
 ?>

@@ -9,8 +9,8 @@ function fcms_run()
 {
   global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
-  if(!isset($GLOBALS["host_id"]) ||
-     !isset($GLOBALS["site_id"]) )
+  if(!isset($GLOBALS[host_id]) ||
+     !isset($GLOBALS[site_id]) )
     error_quit("fcms_run()", "There is something wrong with your configuration!", TRUE);
 
   //set variable -for scopeing
@@ -20,29 +20,38 @@ function fcms_run()
   $db = new db_class();
 
   //get the page_id 
-  if($HTTP_POST_VARS["page_id"])
+  if($HTTP_POST_VARS[mode])
     {
       //set message
-      $message = new message_class($GLOBALS["host_id"], $GLOBALS["site_id"], 
-			     $HTTP_POST_VARS["page_id"], 
-			     $HTTP_POST_VARS["referp_id"],
-			     $HTTP_POST_VARS["component_id"],
-			     $HTTP_POST_VARS["mode"], $HTTP_POST_VARS["action"],
-			     $HTTP_POST_VARS["item"], $HTTP_POST_VARS["text"],
+      $message = new message_class($GLOBALS[host_id], $GLOBALS[site_id], 
+			     $HTTP_POST_VARS[page_id], 
+			     $HTTP_POST_VARS[referp_id],
+			     $HTTP_POST_VARS[component_id],
+			     $HTTP_POST_VARS[mode], $HTTP_POST_VARS[action],
+			     $HTTP_POST_VARS[item], $HTTP_POST_VARS[text],
 				   NULL, NULL);
     }
   else
     {
       
-      if($GLOBALS["debug"])
+      if($GLOBALS[debug])
 	{
+	  //if(!$HTTP_GET_VARS["referp_id"])
+	    //{
+	      //$referp_id = $HTTP_POST_VARS["referp_id"];
+	      //$HTTP_GET_VARS["referp_id"],
+	    //}
+
 	  //DEBUG -turn this off for production !!!
-	  $message = new message_class($GLOBALS["host_id"], $GLOBALS["site_id"],
-				       $HTTP_GET_VARS["page_id"],
-				       $HTTP_GET_VARS["referp_id"],
-				       $HTTP_GET_VARS["component_id"],
-				       $HTTP_GET_VARS["mode"], $HTTP_GET_VARS["action"],
-				       $HTTP_GET_VARS["item"], $HTTP_GET_VARS["text"],
+	  //if(!$HTTP_GET_VARS["referp_id"])
+	    //$HTTP_GET_VARS["referp_id"] = $HTTP_POST_VARS["referp_id"];
+
+	  $message = new message_class($GLOBALS[host_id], $GLOBALS[site_id],
+				       $HTTP_GET_VARS[page_id],
+				       $HTTP_GET_VARS[referp_id],
+				       $HTTP_GET_VARS[component_id],
+				       $HTTP_GET_VARS[mode], $HTTP_GET_VARS[action],
+				       $HTTP_GET_VARS[item], $HTTP_GET_VARS[text],
 				       NULL, NULL);
 	}
       else
@@ -50,9 +59,16 @@ function fcms_run()
 	  //production operation mode
 	  //set default page display message (the buttons will do the
 	  //rest)
-	  $message = new message_class($GLOBALS["host_id"], $GLOBALS["site_id"], 
-				       $HTTP_GET_VARS["page_id"], 
-				       $HTTP_GET_VARS["referp_id"],
+	  //err_out("post stuff:".$HTTP_GET_VARS["page_id"].
+		  //":".$HTTP_GET_VARS["page_id"]
+
+	  //accept a POST referp_id over a GET referp_id
+	  //if($HTTP_POST_VARS["referp_id"])
+	    //$HTTP_GET_VARS["referp_id"] = $HTTP_POST_VARS["referp_id"];
+
+	  $message = new message_class($GLOBALS[host_id], $GLOBALS[site_id], 
+				       $HTTP_GET_VARS[page_id], 
+				       $HTTP_GET_VARS[referp_id],
 				       NULL, "page", "display", NULL, NULL,
 				       NULL, NULL);
 	}

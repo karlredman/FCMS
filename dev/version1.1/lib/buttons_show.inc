@@ -130,9 +130,42 @@ function edit_buttons($message)
 				     "page", "edit",
 				     "edit_page");
 	  print("</td>\n");
-	}
 
-      err_out("security level: $message->security_level");
+	  print("<td>");
+	  $button = new button_class($message->host_id, $message->site_id, 
+				     $message->page_id, $message->referp_id,
+				     $message->content_id,
+				     "page", "add",
+				     "add_page");
+	  print("</td>\n");
+	}
+      //err_out("security level: $message->security_level");
+    }
+
+  //if(0)
+    else if($message->action == "edit")
+    {
+      switch($message->mode)
+	{
+	case host:
+	  break;
+	case site:
+	  break;
+	case page:
+	  if($messge->security_level <= 2)
+	    {
+	      print("<td>");
+	      $button = new button_class($message->host_id, $message->site_id, 
+					 $message->page_id, $message->referp_id,
+					 $message->content_id,
+					 "component", "add",
+					 "add_component");
+	  print("</td>\n");
+	    }
+	  break;
+	case component:
+	  break;
+	}
     }
 }
 

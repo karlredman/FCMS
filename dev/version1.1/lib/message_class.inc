@@ -16,6 +16,8 @@ class message_class
 
   var $security_level;	//security level of user
   var $user_name;
+
+  var $again;		//recursion used at the page level
   
 
   //  var $item;		//context of text (i.e. page_header)
@@ -26,7 +28,8 @@ class message_class
 			 $component_id,
 			 $mode, $action,
 			 $security_level,
-			 $user_name)
+			 $user_name, 
+			 $again)
     //$item, $text)
     {
       $this->host_id = $host_id;
@@ -43,11 +46,28 @@ class message_class
 	$this->security_level = 9; //lowest security level
 
       $this->user_name = $user_name;
+
+      //always set again to FALSE 
+      $this->again = FALSE;
     }
 
   function destroy()
     {}
 
+  function dump()
+    {
+      print("<br>\n
+      host_id = $this->host_id, <br>\n
+	site_id = $this->site_id, <br>\n
+	page_id = $this->page_id, <br>\n
+	referp_id= $this->referp_id, <br>\n
+	component_id= $this->component_id, <br>\n
+	mode = $this->mode, <br>\n
+	action= $this->action, <br>\n
+	security_level= $this->security_level, <br>\n
+	user_name= $this->user_name.<br>\n
+<br>\n");
+	}
 }
 
 ?>
