@@ -115,8 +115,22 @@ class page_class
 	  switch($message->action)
 	    {
 	    case edit:
+	      //display_page_heading();
 	      $this->component = new component_class(&$message);
-	      $this->display_contents_by_page_type();
+	      if($GLOBALS["in_page_editing"])
+		$this->display_contents_by_page_type();
+	      //else
+		//$this->display_contents_new_page_by_type();
+	      break;
+	    case save:
+	      //create a component
+	      $this->component = new component_class(&$message);
+
+	      //save the content type component
+	      $this->component->save_content(&$message);
+	      
+	      //redisplay page after save
+	      $this->pump(&$message);
 	      break;
 	    }
 	  break;

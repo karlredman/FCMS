@@ -53,7 +53,7 @@ page_id		:component owner page
 ref_id		:page refrence # within page (0-n)
 last_updated	:date of component update
 updated_by	:last user to update component
-theme		:component layout (type of component)
+type		:component layout (type of component, i.e content, login, blah)
 heading		:the text displayed as a component header (optional)
 text		:body text for the component (stored as html)
 image		:background image

@@ -10,13 +10,14 @@ $debug = 1;
 like WAP and text browsers will be handled internally (probably using
 this or another flag like this one
 */
-$in_page_editing = 0;
+$in_page_editing = 1;
 
 //image files
 /* Note: these are the fcms default images. The button_class offers a
 way of using different images for different buttons if necessary
 */
 $back_image="$fcms_images_path/back.gif";
+$cancel_image="$fcms_images_path/cancel.gif";
 $edit_image="$fcms_images_path/edit.gif";
 $home_image="$fcms_images_path/home.gif";
 $login_image="$fcms_images_path/login.gif";

@@ -46,14 +46,14 @@ class component_class
       $obj = $this->sql_component_obj;
 
       do{
-	$this->show_content($message);
+	$this->show_content($message, 1);
     
 	print("<td></tr>\n");
     
 	//err_out("$message->mode");
 
-	if(strstr($this->mode, "page") &&
-	   strstr($this->action, "edit") )
+	//if(strstr($this->mode, "page") &&
+	if(strstr($this->action, "edit") )
 	  { 
 	    print("<hr>\n"); 
 	  }
@@ -82,7 +82,7 @@ class component_class
 
 	//display a content block
 	print("<td>\n");
-	$this->show_content(&$message);
+	$this->show_content(&$message,0);
 	print("</td>\n");
 
 	if($col == 2)
@@ -134,7 +134,7 @@ class component_class
 	
 	    //display a sql_component block
 	    print("<td>\n");
-	    $this->show_content(&$message);
+	    $this->show_content(&$message, 0);
 	    print("</td>\n");
 	
 	    if($col == 2)
@@ -154,7 +154,7 @@ class component_class
 	    print("<tr>\n");
 	
 	    print("<td colspan=2>\n");
-	    $this->show_content(&$message);
+	    $this->show_content(&$message, 0);
 	    print("</td>\n");
 	
 	    print("</tr>\n");
@@ -171,8 +171,10 @@ class component_class
 	print("<hr>\n");
     }
 
-  function show_content($message)
+  function show_content($message, $wide)
     {
+      //display a component of type content
+
       $obj = $this->sql_component_obj;
 
       if($this->mode == "page" &&
@@ -191,16 +193,46 @@ class component_class
 	    }
 	}
   
+      if(strstr($message->mode, "component") && 
+	 strstr($message->action, "edit") && 
+	 $message->component_id == $obj->content_id) 
+	{
+	  //tell user what we are doing
+	  print("<b><font size=+2 >".
+		"Editing component $obj->ref_id:".
+		"<br>$obj->title".
+		"</font></b><br><br>\n");
+	}
+
       //display content title
       if($obj->title_align == "center")
 	echo("<center>");
   
       //EDITING GOES HERE !!!
 
-      echo("<font size=+$obj->title_font_size face=$obj->title_font_face> $obj->title </font>");
+      if(strstr($message->mode, "component") && 
+	 strstr($message->action, "edit") && 
+	 $message->component_id == $obj->content_id) 
+	{
+	  //open a form around the content
+	  form_open(NULL);
+
+	  //setup standard variables (save in the current mode)
+	  form_std($message->host_id, $message->site_id, 
+		  $message->page_id, $message->referp_id,
+		   $message->component_id,
+		  $message->mode, "save");
+
+	  form_add_textbox("content_title", $obj->title, NULL);
+
+
+	}
+      else
+	print("<font size=+$obj->title_font_size face=$obj->title_font_face> ".
+	      "$obj->title </font>\n");
 
       if($obj->title_align == "center")
-	echo("</center>\n");
+	print("</center>\n");
   
       echo("<br>\n");
   
@@ -210,29 +242,69 @@ class component_class
       if($obj->body_align == "center")
 	echo("<center>\n");
 
-      //convert body to html
-      $body = txt2html($obj->body);
 	  
       if(strstr($message->mode, "component") && 
 	 strstr($message->action, "edit") && 
 	 $message->component_id == $obj->content_id) 
 	{
-	  err_out("GOT TO COMPONENT EDIT");
-	  //edit_content_item($this->sql_component_obj->title, $body);
-	  form_open(NULL);
-	  form_std($message->host_id, $message->site_id, 
-		  $message->page_id, $message->referp_id,
-		   $message->component_id,
-		  $message->mode, "save");
-	  form_add_textarea("component_body", $body, NULL, NULL);
+	  //show edit box for body
+	  if($wide)
+	    form_add_textarea("content_body", $this->sql_component_obj->body, 
+			      80, NULL);
+	  else
+	    form_add_textarea("content_body", $this->sql_component_obj->body, 
+			      NULL, NULL);
+
+	  //put buttons below box
+	  print("<br>\n");
+	  
+	  //close center -buttons go on the right
+	  if($obj->body_align == "center")
+	    print("</center>\n");
+
+	  //show a submit button
 	  form_add_submit_reset(NULL);
+
+	  //open center if needed
+	  if($obj->body_align == "center")
+	    print("<center>\n");
+
+	  //close the form
 	  form_close();
 	}
       else
-	echo("<font size=$obj->body_font_size face=$obj->body_font_face> $body </font>\n");
+	{
+	  //convert body to html
+	  $body = txt2html($obj->body);
+	  print("<font size=$obj->body_font_size ".
+		"face=$obj->body_font_face> $body </font>\n");
+	}
   
       if($obj->body_align == "center")
 	echo("</center>\n"); 
+    }
+
+  function save_content($message)
+    {
+      //save a content type component
+
+      global $HTTP_POST_VARS;
+
+      //make query string
+      $title=$HTTP_POST_VARS["content_title"];
+      $body=$HTTP_POST_VARS[content_body];
+
+      $query_str="update content set body='$body',".
+	" title=\"$title\"".
+	" where content_id=$message->component_id";
+
+      if(! ($result = mysql_query($query_str)) )
+	if(! ($result = mysql_query($query_str)) )
+	  error_quit("component_class()", "save_content():mysql_query()", TRUE);
+
+      //change mode to page edit
+      $message->mode = "page";
+      $message->action = "edit";
     }
 }
 ?>

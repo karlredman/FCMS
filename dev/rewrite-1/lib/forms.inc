@@ -48,11 +48,13 @@ function form_std($host_id, $site_id,
 
 function form_add_textbox($name, $text, $size)
 {
+  if(!$size)
+    $size = "40";
   
   print("
 		<input  type=text
 		        name=$name
-			value=$text
+			value=\"$text\"
 			size=$size>\n
 	");
 }
@@ -80,7 +82,7 @@ function form_add_submit_reset($submit_name)
 
   print("
         <input type=submit
-                value=$submit_name>\n
+                value=\"$submit_name\">\n
 
         <input type=reset>\n
 	");

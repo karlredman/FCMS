@@ -29,6 +29,9 @@ class button_class
 	case back:
 	  $image = $GLOBALS["back_image"]; 
 	  break; 
+	case cancel:
+	  $image = $GLOBALS["cancel_image"]; 
+	  break;
 	case edit:
 	  $image = $GLOBALS["edit_image"]; 
 	  break; 
