@@ -19,10 +19,10 @@ page_id		-id of page
 referp_id	-id of refering page
 state		-state of operation
 context		-context of state
-action		-action code 
 content		-body of text
 item_name	-name of item
 item_type	-type of item
+action		-action code 
 
 
 Access Info:

@@ -1,6 +1,7 @@
 HOST:
 id		:id of host (the toplevel of the hiarchy)
 access		:list of users with hostlevel access (designers) 
+admin_info	:admin contact info host-wide
 ____________________________________________________________________
 SITE:
 id		:site id
@@ -8,7 +9,7 @@ host_id		:host id
 homepage_id	:id of homepage
 url		:url of site
 last_updated	:date of last site update
-updated_bye	:last user to update page
+updated_by	:last user to update page
 header		:site wide page header
 footer		:site wide page footer
 contact_name    :site contact name
@@ -16,7 +17,7 @@ contact_phone   :site contact phone
 contact_email   :site contact email
 contact_other   :other info for conact (specific to page)
 admin_info	:admin contact info, etc.
-title		:sitewide title (SITE_TITLE:PAGE_TITLE)
+name		:sitewide title (SITE_TITLE:PAGE_TITLE)
 heading		:sitewide page heading
 access		:list of users allowed access
 restricted	:things which are restricted by host level
