@@ -5,6 +5,8 @@ ____________________________________________________________________
 SITE:
 id		:site id
 host_id		:host id
+homepage_id	:id of homepage
+url		:url of site
 last_updated	:date of last site update
 updated_bye	:last user to update page
 header		:site wide page header
@@ -17,11 +19,14 @@ admin_info	:admin contact info, etc.
 title		:sitewide title (SITE_TITLE:PAGE_TITLE)
 heading		:sitewide page heading
 access		:list of users allowed access
+restricted	:things which are restricted by host level
 ____________________________________________________________________
 
 PAGE:
 id		:page id
+host_id		:host id
 site_id		:site id
+ref_id		:page refrence # within site (0-n)
 last_updated	:date of page update
 updated_by	:last user to update page
 parent		:the parent page
@@ -36,19 +41,23 @@ contact_phone	:defaults to site_phone
 contact_email	:defaults to site_email
 contact_other	:other info for conact (specific to page)
 access		:list of users allowed to edit this page	
+restricted	:number wich represents restriction by site or host levels
 ____________________________________________________________________
 
 
-MODULE:
-id		:the module id
-pages		:list of module owners (by page_id)
-last_updated	:date of module update
-updated_by	:last user to update module
-theme		:module layout (type of module)
-heading		:the text displayed as a module header (optional)
-text		:body text for the module (stored as html)
+COMPONENT:
+id		:the component id
+host_id		:host id
+page_id		:component owner page
+ref_id		:page refrence # within page (0-n)
+last_updated	:date of component update
+updated_by	:last user to update component
+theme		:component layout (type of component)
+heading		:the text displayed as a component header (optional)
+text		:body text for the component (stored as html)
 image		:background image
 access		:list of users allowed to edit this page	
+restricted	:number wich represents restriction by page,site,or host levels
 
 
 
@@ -60,6 +69,7 @@ access		:list of users allowed to edit this page
 ____________________________________________________________________
 USERS:
 id		:user id
+host_id		:host id
 user_name	:user name (login name)
 password	:password
 user_level	:component, page, site, design

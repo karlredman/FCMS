@@ -1,0 +1,43 @@
+COMMAND: do ACTION within CONTEXT of STATE
+
+STATES:
+save
+edit
+public
+authorize
+
+CONTEXTS:
+host
+site
+page
+content
+init
+run
+
+FORM VARIABLES:
+page_id		-id of page
+referp_id	-id of refering page
+state		-state of operation
+context		-context of state
+action		-action code 
+content		-body of text
+item_name	-name of item
+item_type	-type of item
+
+
+Access Info:
+site level access to add/dete page (restricted by host)
+page level access to add/dete component (restricted by site level)
+page level access to edit page attributes (restricted by site level)
+component level access to edit component and it's attributes (restricted by site and page levels)
+
+page level access provides edit to all components (restricted)
+from the host level you can edit any part of any site
+from the site level you can edit any part of any page that is not restricted by the host level settings
+from the page level you can edit any part of any page that is not restricted by host or site level settings
+from the component level you can edit any part of any component that is not restricted by host, site, or page level settings
+
+host level can add sites
+site level can add pages
+page level can add components
+component level can edit components
