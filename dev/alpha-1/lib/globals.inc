@@ -1,0 +1,73 @@
+<?
+///////////////////// Authentication
+//////////////////////////////////////////////////////////////////////////////////////////
+//access
+$db_name="fcms";
+$access_host="";
+$access_user="root";		//should be 'fcms' and the edits will be based on users added
+$access_password="eertwfld";
+/*
+	fcms users are as follows:
+		fcms 		- basic "web" user (read-only rights)
+		fcms-admin	- administrator for site (restricted)
+		fcms-su		- administrator for mymcs database
+
+		Note: the authentication scheme will take care of the editing, etc.
+*/
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////// Set By Index.php
+//////////////////////////////////////////////////////////////////////////////////////////
+$host_id=1;		// relative id of host (not used as of 3-23-03)
+$site_id=1;		// relative id of site
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+///////////////////// Set by fcms using various forms and such
+//////////////////////////////////////////////////////////////////////////////////////////
+//// Identifiers (always passed by forms)
+$id;			// actual id of page (depreciating)
+$page_id;		// actual id of page
+$referp_id;		// the internal refered-by page
+
+//// Database Objects
+$db;			// database connection
+
+$site;			// select table site
+$page;			// select table page
+$content;		// select table content
+
+$site_obj;		// current-site object
+$current_page_obj;	// current-page object
+$content_obj;		// content_obj;
+
+//// Always passed by forms
+$action_code;		// take action n based on $mode
+$mode;			// run in x mode
+			/* The various modes are:
+					edit_content_item
+					edit_heading
+					edit_page
+					login
+					logout
+					NULL
+					preview
+					save
+ */
+
+//// Sometimes passed in
+//data
+$content_title;
+$content_body;
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////// Options Globals
+$alt_edit = 1;
+$demo_mode = 1;
+?>
